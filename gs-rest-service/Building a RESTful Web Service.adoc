@@ -1,0 +1,397 @@
+== RESTful 웹 서비스 만들기
+이 가이드는 Spring으로 "hello world" http://spring.io/understanding/REST[RESTful 웹 서비스]를 만드는 과정을 안내한다.
+
+== 무엇을 만들게 되는가
+다음 HTTP GET 요청을 수락하는 서비스를 만들것이다:
+
+[source,indent=0]
+----
+http://localhost:8080/greeting
+----
+
+그리고 JSON 방식으로 greeting을 응답한다.
+
+[source,json,indent=0]
+----
+{"id":1,"content":"Hello, World!"}
+----
+
+쿼리 문자열에 선택적 `name` 파라미터를 사용하여 greeting을 사용자 정의할 수 있다.
+
+[source,indent=0]
+----
+http://localhost:8080/greeting?name=User
+----
+
+`name` 파라미터 값은 기본값 "World"를 대체하여 응답에 반영된다:
+
+[source,json,indent=0]
+----
+{"id":1,"content":"Hello, User!"}
+----
+
+== 무엇이 필요한가
+* 약 15분
+* 선호하는 텍스트 에디터 혹은 IDE
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.8] 혹은 그 이상
+* http://www.gradle.org/downloads[Gradle 4+] 혹은 https://maven.apache.org/download.cgi[Maven 3.2+]
+* 코드를 IDE로 직접 가져올 수도 있다.
+** http://spring.io/guides/gs/sts[Spring Tool Suite (STS)]
+** http://spring.io/guides/gs/intellij-idea/[IntelliJ IDEA]
+
+== 이 가이드를 완료하는 방법
+대부분의 http://spring.io/guides[Spring Getting Started] 가이드와 마찬가지로, 처음부터 시작하여 각 단계를 완료하거나 이미 익숙한 기본 설정 단계를 건너뛸 수 있다. 어느 쪽이든 코드가 작동한다.
+
+처음부터 시작하려면 <<build-with-gradle>>로 이동하시오.
+
+기본 사항을 건너뛰려면 다음을 수행하라:
+
+* 이 가이드의 소스 저장소를 https://github.com/spring-guides/gs-rest-service/archive/master.zip[다운로드]하여 압축을 풀거나 http://spring.io/understanding/Git[Git]: `git clone https://github.com/spring-guides/gs-rest-service.git` 을 사용하여 clone 하시오.
+* cd into `gs-rest-service/initial`
+* <<create-resource-representation-class>>로 넘어가시오.
+
+**끝나면** `gs-rest-service/complete` 코드와 결과를 비교할 수 있다.
+
+[[build-with-gradle]]
+== Gradle로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만 http://gradle.org/[Gradle] 및 https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. 둘다 익숙하지 않은 경우 http://spring.io/guides/gs/gradle[Gradle로 Java 프로젝트 만들기] 또는 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+=== Gradle 빌드 파일 만들기
+아래는 https://github.com/spring-guides/gs-rest-service/blob/master/initial/build.gradle[초기 Gradle 빌드 파일]이다.
+
+`build.gradle`
+
+[source,gradle,indent=0]
+----
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'gs-rest-service'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+----
+
+https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html[Spring Boot Gralde 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== Maven으로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만  https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. Maven이 익숙하지 않은 경우 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+`pom.xml`
+
+[source,xml,indent=0]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework</groupId>
+    <artifactId>gs-rest-service</artifactId>
+    <version>0.1.0</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.5.RELEASE</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
+----
+
+https://docs.spring.io/spring-boot/docs/current/maven-plugin[Spring Boot Maven 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== IDE로 빌드하기
+* http://spring.io/guides/gs/sts/[Spring Tool Suite]에서 import 하는 가이드를 읽으시오.
+* http://spring.io/guides/gs/intellij-idea[IntelliJ IDEA]에서 가이드를 읽으시오.
+
+[[create-resource-representation-class]]
+== resource representation 클래스 생성하기
+이제 프로젝트와 빌드 시스템을 구축했으므로 웹 서비스를 만들 수 있다.
+
+서비스 상호 작용에 대해 생각하며 단계를 진행하세요.
+
+서비스는 `/greeting` 에 대한 `GET` 요청을 처리하며 선택적으로 쿼리 문자열에 `name` 매개 변수를 사용한다. `GET` 요청은 greeting을 JSON body에 표현하여 `200 OK` 를 함께 리턴해야 한다. 다음과 같이 보일 것이다:
+
+[source,json,indent=0]
+----
+{
+    "id": 1,
+    "content": "Hello, World!"
+}
+----
+
+`id` 필드는 greeting에 대한 고유한 식별자이며 `content` 는 greeting의 텍스트이다.
+
+greeting을 모델링하려면 resource representation 클래스를 작성하시오. `id` 및 `content` 데이터에 대한 필드, 생성자 및 접근자를 POJO (Plain Old Java Object)로 제공하시오.
+
+`src/main/java/hello/Greeting.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+public class Greeting {
+
+    private final long id;
+    private final String content;
+
+    public Greeting(long id, String content) {
+        this.id = id;
+        this.content = content;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+----
+
+====
+아래 단계에서 볼 수 있듯이, Spring은 https://github.com/FasterXML/jackson[Jackson JSON] 라이브러리를 사용하여 `Greeting` 유형의 인스턴스를 JSON으로 자동 정리한다.
+====
+
+그런 다음 greetings를 지원하는 리소스 컨트롤러를 생성한다.
+
+== 리소스 컨트롤러 생성
+RESTful 웹 서비스 구축에 대한 Spring의 접근 방식에서 HTTP 요청은 컨트롤러에 의해 처리된다. 이런 컴포넌트는 `@RestController` 어노테이션을 통해 쉽게 식별할 수 있으며, `GreetingController` 는 `Greeting` 클래스의 새 인스턴스를 반환하여 `/greeting` 에 대한 `GET` 요청을 처리한다:
+
+`src/main/java/hello/GreetingController.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GreetingController {
+
+    private static final String template = "Hello, %s!";
+    private final AtomicLong counter = new AtomicLong();
+
+    @RequestMapping("/greeting")
+    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+        return new Greeting(counter.incrementAndGet(),
+                            String.format(template, name));
+    }
+}
+----
+
+이 컨트롤러는 간단하지만 내부에서 많은 일들이 일어나고 있다. 단계별로 진행을 해봅시다.
+
+`@RequestMapping` 어노테이션은 `/greeting` 에 대한 HTTP 요청이 `greeting()` 메소드에 매핑되도록 한다.
+
+====
+`@RequestMapping` 은 기본적으로 모든 HTTP 작업을 매핑하기 때문에 위의 예에서는 `GET` vs `PUT`, `POST` 등을 지정하지 않는다. `@RequestMapping(method=GET)` 을 사용하여 매핑의 범위를 좁힌다.
+====
+
+`@RequestParam` 은 쿼리 문자열 매개 변수 `name` 의 값을 greeting() 메소드의 `name` 매개 변수에 바인딩한다. 요청에 `name` 매개 변수가 없으면 `defaultValue` "World"가 사용된다.
+
+메소드 본문을 구현하면 `counter`의 다음 값을 기반으로 `id` 와 `content` 속성을 갖는 새 Greeting 객체가 만들어지고 반환되며 greeting `템플릿` 을 사용하여 지정된 `name` 의 서식이 지정된다.
+
+기존 MVC 컨트롤러와 RESTful 웹 서비스 컨트롤러 간의 주요 차이점은 HTTP response body를 만드는 방법이다. http://spring.io/understanding/view-templates[뷰 기술]을 사용하여 greeting 데이터를 HTML로 server-side 렌더링하는 대신 RESTful 웹 서비스 컨트롤러는 `Greeting` 객체를 채우고 반환한다. 객체 데이터는 JSON으로 HTTP 응답에 직접 작성된다.
+
+이 코드는 모든 메소드가 뷰가 아닌 도메인 객체를 반환하는 컨트롤러로 클래스를 표시한다는 Spring 4의 새로운 어노테이션 `@RestController` 을 사용한다. 이것은 `@Controller` 와 `@ResponseBody` 를 함께 사용한 것의 단축형이다.
+
+`Greeting` 객체는 JSON으로 반환해야 한다. Spring의 HTTP 메시지 컨버터 지원 덕분에 이 변환을 수동으로 수행할 필요가 없다. http://wiki.fasterxml.com/JacksonHome[Jackson 2]가 클래스 경로에 있기 때문에 Spring의 `MappingJackson2HttpMessageConverter` 가 자동으로 선택되어 `Greeting` 인스턴스를 JSON으로 변환한다.
+
+== 실행 가능한 어플리케이션 만들기
+이 서비스를 외부 어플리케이션 서버에 배포하기 위해 기존의 http://spring.io/understanding/WAR[WAR] 파일로 패키징할 수 있지만, 아래에서 설명하는 더 간단한 접근 방식으로 독립 실행형 어플리케이션을 생성할 수 있다. Java `main()` 메소드로 구동되는 실행 가능한 단일 JAR 파일로 모든 것을 패키징한다. 이 과정에서 외부 인스턴스에 배포하는 대신 HTTP 런타임으로 Spring에서 지원하는 내장형 Tomcat 서블릿 컨테이너를 사용한다.
+
+`src/main/java/hello/어플리케이션.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+import org.springframework.boot.Spring어플리케이션;
+import org.springframework.boot.autoconfigure.SpringBoot어플리케이션;
+
+@SpringBoot어플리케이션
+public class 어플리케이션 {
+
+    public static void main(String[] args) {
+        Spring어플리케이션.run(어플리케이션.class, args);
+    }
+}
+----
+
+`@SpringBoot어플리케이션` 은 다음을 모두 추가하는 편리한 주석이다:
+
+* `@Configuration` 은 클래스를 어플리케이션 context의 bean 정의 소스로 태그 지정한다.
+* `@EnableAutoConfiguration` 은 Spring Boot에게 클래스 경로 설정, 다른 bean 및 다양한 프로퍼티 설정을 기반으로 bean 추가를 시작하도록 한다.
+* 일반적으로 `@EnableWebMvc` 를 Spring MVC app에 추가할 것이지만, Spring Boot는 클래스 경로에서 **spring-webmvc**를 발견할 때 그것을 자동으로 추가한다. 이것은 어플리케이션에 웹 어플리케이션으로 플래그를 지정하고 `DispatcherServlet` 설정과 같은 주요 동작을 활성화 한다.
+* `@ComponentScan` 은 `hello` 패키지에서 다른 컴포넌트, 구성 및 서비스를 찾아서 컨트롤러를 찾을 수 있도록 Spring에 지시한다.
+
+`main()` 메소드는 `Spring Boot의 SpringApplicaiton.run()` 메소드를 사용하여 어플리케이션을 시작한다. 한줄의 XML이 없다는 것을 알고 있었는가? **web.xml** 파일도 없다. 이 웹 어플리케이션은 100% 순수 자바이며 인프라 구성에 대해 다룰 필요가 없다.
+
+=== 실행 가능한 JAR 만들기
+Gradle 또는 Maven을 사용하여 커맨드 라인에서 어플리케이션을 실행할 수 있다. 또는 모든 필요한 의존성, 클래스 및 리소스 포함하는 단일 실행 가능한 JAR 파일을 빌드하고 실행할 수 있다. 따라서 개발 생명주기(life cycle), 다양한 환경에 걸쳐 어플리케이션으로 서비스를 쉽게 제공 및 배포할 수 있다.
+
+Gradle을 사용하는 경우 `./gradlew bootRun` 을 사용하여 어플리케이션을 실행할 수 있다. 또는 `./gradlew build` 를 사용하여 JAR 파일을 작성할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar build/libs/gs-rest-service-0.1.0.jar
+----
+
+Maven을 사용하는 경우 ./mvnw spring-boot:run을 사용하여 어플리케이션을 실행할 수 있다. 또는 ./mvnw clean package로 JAR 파일을 빌드할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar target/gs-rest-service-0.1.0.jar
+----
+
+====
+위 절차는 실행 가능한 JAR를 생성한다. 고전의 http://spring.io/guides/gs/convert-jar-to-war/[WAR 파일을 빌드]하도록 선택할 수도 있다.
+====
+
+로깅 출력이 표시된다. 몇 초 이내에 서비스가 실행되어야 한다.
+
+== 서비스 테스트
+이제 서비스가 시작되었으니 http://localhost:8080/greeting을 방문해 보시오:
+
+[source,json,indent=0]
+----
+{"id":1,"content":"Hello, World!"}
+----
+
+http://localhost:8080/greeting?name=User와 같이 name 쿼리 문자열 매개 변수를 제공하시오. content 속성의 값이 "Hello World!"에서 "Hello User!"로 변경되는지 확인하시오:
+
+[source,json,indent=0]
+----
+{"id":2,"content":"Hello, User!"}
+----
+
+이 변경은 `GreetingController` 의 `@RequestParam` 방식이 예상대로 작동함을 보여준다. `name` 매개 변수에는 기본값 "World"가 지정되었지만 항상 쿼리 문자열을 통해 명시적으로 재정의될 수 있다.
+
+`id` 속성이 `1` 에서 `2` 로 어떻게 바뀌었는지 확인하시오. 이는 여러 요청에서 동일한 `GreetingController` 인스턴스에 대해 작업 중이며 `counter` 필드가 예상대로 각 호출에서 증가되고 있음을 증명한다.
+
+== 요약
+축하합니다! 방금 Spring과 함께 RESTful 웹 서비스를 개발했다.
+
+== 다른 예제들
+다음 가이드들도 도움이 될 것이다:
+
+* https://spring.io/guides/gs/accessing-gemfire-data-rest/[Accessing GemFire Data with REST]
+* https://spring.io/guides/gs/accessing-mongodb-data-rest/[Accessing MongoDB Data with REST]
+* https://spring.io/guides/gs/accessing-data-mysql/[Accessing data with MySQL]
+* https://spring.io/guides/gs/accessing-data-rest/[Accessing JPA Data with REST]
+* https://spring.io/guides/gs/accessing-neo4j-data-rest/[Accessing Neo4j Data with REST]
+* https://spring.io/guides/gs/consuming-rest/[Consuming a RESTful Web Service]
+* https://spring.io/guides/gs/consuming-rest-angularjs/[Consuming a RESTful Web Service with AngularJS]
+* https://spring.io/guides/gs/consuming-rest-jquery/[Consuming a RESTful Web Service with jQuery]
+* https://spring.io/guides/gs/consuming-rest-restjs/[Consuming a RESTful Web Service with rest.js]
+* https://spring.io/guides/gs/securing-web/[Securing a Web Application]
+* https://spring.io/guides/tutorials/bookmarks/[Building REST services with Spring]
+* https://spring.io/guides/tutorials/react-and-spring-data-rest/[React.js and Spring Data REST]
+* https://spring.io/guides/gs/spring-boot/[Building an Application with Spring Boot]
+* https://spring.io/guides/gs/testing-restdocs/[Creating API Documentation with Restdocs]
+* https://spring.io/guides/gs/rest-service-cors/[Enabling Cross Origin Requests for a RESTful Web Service]
+* https://spring.io/guides/gs/rest-hateoas/[Building a Hypermedia-Driven RESTful Web Service]
+* https://spring.io/guides/gs/circuit-breaker/[Circuit Breaker]
