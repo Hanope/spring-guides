@@ -1,0 +1,263 @@
+== 스케쥴링 작업
+이 가이드는 Spring으로 스케쥴링 작업을 만드는 과정을 안내한다.
+
+== 무엇을 만들게 되는가
+Spring의 `@Scheduled` 어노테이션을 사용하여 5초마다 현재 시간을 출력하는 어플리케이션을 만들 것이다.
+
+== 무엇이 필요한가
+* 약 15분
+* 선호하는 텍스트 에디터 혹은 IDE
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.8] 혹은 그 이상
+* http://www.gradle.org/downloads[Gradle 4+] 혹은 https://maven.apache.org/download.cgi[Maven 3.2+]
+* 코드를 IDE로 직접 가져올 수도 있다.
+** http://spring.io/guides/gs/sts[Spring Tool Suite (STS)]
+** http://spring.io/guides/gs/intellij-idea/[IntelliJ IDEA]
+
+== 이 가이드를 완료하는 방법
+대부분의 http://spring.io/guides[Spring Getting Started] 가이드와 마찬가지로, 처음부터 시작하여 각 단계를 완료하거나 이미 익숙한 기본 설정 단계를 건너뛸 수 있다. 어느 쪽이든 코드가 작동한다.
+
+처음부터 시작하려면 <<build-with-gradle>>로 이동하시오.
+
+기본 사항을 건너뛰려면 다음을 수행하라:
+
+* 이 가이드의 소스 저장소를 https://github.com/spring-guides/gs-scheduling-tasks/archive/master.zip[다운로드]하여 압축을 풀거나 http://spring.io/understanding/Git[Git]: `git clone https://github.com/spring-guides/gs-scheduling-tasks.git` 을 사용하여 clone 하시오.
+* cd into `gs-scheduling-tasks/initial`
+* <<create-a-scheduled-task>>로 넘어가시오.
+
+**끝나면** `gs-scheduling-tasks/complete` 코드와 결과를 비교할 수 있다.
+
+[[build-with-gradle]]
+== Gradle로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만 http://gradle.org/[Gradle] 및 https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. 둘다 익숙하지 않은 경우 http://spring.io/guides/gs/gradle[Gradle로 Java 프로젝트 만들기] 또는 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+=== Gradle 빌드 파일 만들기
+아래는 https://github.com/spring-guides/gs-scheduling-tasks/blob/master/initial/build.gradle[초기 Gradle 빌드 파일]이다.
+
+`build.gradle`
+
+[source,gradle,indent=0]
+----
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'gs-scheduling-tasks'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    testCompile("junit:junit")
+}
+----
+
+https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html[Spring Boot Gralde 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== Maven으로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만  https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. Maven이 익숙하지 않은 경우 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+`pom.xml`
+
+[source,xml,indent=0]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework</groupId>
+    <artifactId>gs-scheduling-tasks</artifactId>
+    <version>0.1.0</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.5.RELEASE</version>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+----
+
+https://docs.spring.io/spring-boot/docs/current/maven-plugin[Spring Boot Maven 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== IDE로 빌드하기
+* http://spring.io/guides/gs/sts/[Spring Tool Suite]에서 import 하는 가이드를 읽으시오.
+* http://spring.io/guides/gs/intellij-idea[IntelliJ IDEA]에서 가이드를 읽으시오.
+
+[[create-a-scheduled-task]]
+== 스케쥴 작업 생성하기
+이제 프로젝트를 구축했으므로 스케쥴 작업을 만들 수 있다.
+
+`src/main/java/hello/ScheduledTasks.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ScheduledTasks {
+
+    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    @Scheduled(fixedRate = 5000)
+    public void reportCurrentTime() {
+        log.info("The time is now {}", dateFormat.format(new Date()));
+    }
+}
+----
+
+`Scheduled` 어노테이션은 특정 메소드가 실행될 시기를 정의한다. 참고: 이 예제에서는 각 호출의 시작 시간으로부터 측정된 메소드 호출 간격을 지정하는 `fixedRate` 를 사용한다. `fixedDelay` 와 같은 https://docs.spring.io/spring/docs/current/spring-framework-reference/html/scheduling.html#scheduling-annotation-support-scheduled[다른 옵션]이 있는데, 이 옵션은 작업 완료시 측정된 호출 간격을 지정한다. 더 정교한 작업 스케쥴링을 위해 https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html[`@Scheduled(cron=". . .")` 표현식을 사용]할 수도 있다.
+
+== 스케쥴링 사용
+스케줄링 작업을 웹 어플리케이션 및 WAR 파일에 포함할 수 있지만, 아래서 설명하는 더 간단한 접근 방식으로 독립 실행형 어플리케이션을 생성한다. Java `main()` 메소드로 구동되는 실행 가능한 단일 JAR 파일로 모든 것을 패키징한다.
+
+`src/main/java/hello/Application.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableScheduling
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class);
+    }
+}
+----
+
+`@SpringBoot어플리케이션` 은 다음을 모두 추가하는 편리한 주석이다:
+
+* `@Configuration` 은 클래스를 어플리케이션 context의 bean 정의 소스로 태그 지정한다.
+* `@EnableAutoConfiguration` 은 Spring Boot에게 클래스 경로 설정, 다른 bean 및 다양한 프로퍼티 설정을 기반으로 bean 추가를 시작하도록 한다.
+* 일반적으로 `@EnableWebMvc` 를 Spring MVC app에 추가할 것이지만, Spring Boot는 클래스 경로에서 **spring-webmvc**를 발견할 때 그것을 자동으로 추가한다. 이것은 어플리케이션에 웹 어플리케이션으로 플래그를 지정하고 `DispatcherServlet` 설정과 같은 주요 동작을 활성화 한다.
+* `@ComponentScan` 은 `hello` 패키지에서 다른 컴포넌트, 구성 및 서비스를 찾아서 컨트롤러를 찾을 수 있도록 Spring에 지시한다.
+
+`main()` 메소드는 `Spring Boot의 SpringApplicaiton.run()` 메소드를 사용하여 어플리케이션을 시작한다. 한줄의 XML이 없다는 것을 알고 있었는가? **web.xml** 파일도 없다. 이 웹 어플리케이션은 100% 순수 자바이며 인프라 구성에 대해 다룰 필요가 없다.
+
+`@EnableScheduling` 은 백그라운드 작업 실행자를 생성하도록 보장한다. 그것 없이는 아무것도 스케쥴되지 않는다.
+
+=== 실행 가능한 JAR 만들기
+Gradle 또는 Maven을 사용하여 커맨드 라인에서 어플리케이션을 실행할 수 있다. 또는 모든 필요한 의존성, 클래스 및 리소스 포함하는 단일 실행 가능한 JAR 파일을 빌드하고 실행할 수 있다. 따라서 개발 생명주기(life cycle), 다양한 환경에 걸쳐 어플리케이션으로 서비스를 쉽게 제공 및 배포할 수 있다.
+
+Gradle을 사용하는 경우 `./gradlew bootRun` 을 사용하여 어플리케이션을 실행할 수 있다. 또는 `./gradlew build` 를 사용하여 JAR 파일을 작성할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar build/libs/gs-scheduling-tasks-0.1.0.jar
+----
+
+Maven을 사용하는 경우 ./mvnw spring-boot:run을 사용하여 어플리케이션을 실행할 수 있다. 또는 ./mvnw clean package로 JAR 파일을 빌드할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar target/gs-scheduling-tasks-0.1.0.jar
+----
+
+====
+위 절차는 실행 가능한 JAR를 생성한다. 고전의 http://spring.io/guides/gs/convert-jar-to-war/[WAR 파일을 빌드]하도록 선택할 수도 있다.
+====
+
+로그 출력이 표시되고 백그라운드 스레드에 있는 로그를 통해 확인할 수 있다. 5초마다 예약된 작업이 표시되는 것을 볼 수 있다:
+
+[source,bash,indent=0]
+----
+[...]
+2016-08-25 13:10:00.143  INFO 31565 --- [pool-1-thread-1] hello.ScheduledTasks : The time is now 13:10:00
+2016-08-25 13:10:05.143  INFO 31565 --- [pool-1-thread-1] hello.ScheduledTasks : The time is now 13:10:05
+2016-08-25 13:10:10.143  INFO 31565 --- [pool-1-thread-1] hello.ScheduledTasks : The time is now 13:10:10
+2016-08-25 13:10:15.143  INFO 31565 --- [pool-1-thread-1] hello.ScheduledTasks : The time is now 13:10:15
+----
+
+== 요약
+축하합니다! 스케줄 작업 어플리케이션을 개발했다. 실제 코드는 빌드 파일보다 짧았다! 이 기술은 모든 유형의 어플리케이션에도 작동된다.
+
+== 다른 예제들
+다음 가이드들도 도움이 될 것이다:
+
+* https://spring.io/guides/gs/spring-boot/[Building an Application with Spring Boot]
+* https://spring.io/guides/gs/batch-processing/[Creating a Batch Service]
