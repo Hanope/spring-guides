@@ -244,7 +244,7 @@ java -jar target/gs-scheduling-tasks-0.1.0.jar
 
 로그 출력이 표시되고 백그라운드 스레드에 있는 로그를 통해 확인할 수 있다. 5초마다 예약된 작업이 표시되는 것을 볼 수 있다:
 
-[source,bash,indent=0]
+[source,indent=0]
 ----
 [...]
 2016-08-25 13:10:00.143  INFO 31565 --- [pool-1-thread-1] hello.ScheduledTasks : The time is now 13:10:00

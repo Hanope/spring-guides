@@ -301,9 +301,9 @@ public class GreetingController {
 `Greeting` 객체는 JSON으로 반환해야 한다. Spring의 HTTP 메시지 컨버터 지원 덕분에 이 변환을 수동으로 수행할 필요가 없다. http://wiki.fasterxml.com/JacksonHome[Jackson 2]가 클래스 경로에 있기 때문에 Spring의 `MappingJackson2HttpMessageConverter` 가 자동으로 선택되어 `Greeting` 인스턴스를 JSON으로 변환한다.
 
 == 실행 가능한 어플리케이션 만들기
-이 서비스를 외부 어플리케이션 서버에 배포하기 위해 기존의 http://spring.io/understanding/WAR[WAR] 파일로 패키징할 수 있지만, 아래에서 설명하는 더 간단한 접근 방식으로 독립 실행형 어플리케이션을 생성할 수 있다. Java `main()` 메소드로 구동되는 실행 가능한 단일 JAR 파일로 모든 것을 패키징한다. 이 과정에서 외부 인스턴스에 배포하는 대신 HTTP 런타임으로 Spring에서 지원하는 내장형 Tomcat 서블릿 컨테이너를 사용한다.
+이 서비스를 외부 어플리케이션 서버에 배포하기 위해 기존의 http://spring.io/understanding/WAR[WAR] 파일로 패키징할 수 있지만, 아래에서 설명하는 더 간단한 접근 방식으로 독립 실행형 어플리케이션을 생성할 수 있다. Java `main()` 메소드로 구동되는 실행 가능한 단일 JAR 파일로 모든 것을 패키징한다. 이 과정에서 외부 인스턴스에 배포하는 대신 HTTP 런타임으로 Spring에서 지원하는 내장형 http://spring.io/understanding/Tomcat[Tomcat] 서블릿 컨테이너를 사용한다.
 
-`src/main/java/hello/어플리케이션.java`
+`src/main/java/hello/Application.java`
 
 [source,java,indent=0]
 ----
