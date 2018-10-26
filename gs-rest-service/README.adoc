@@ -309,19 +309,19 @@ public class GreetingController {
 ----
 package hello;
 
-import org.springframework.boot.Spring어플리케이션;
-import org.springframework.boot.autoconfigure.SpringBoot어플리케이션;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBoot어플리케이션
-public class 어플리케이션 {
+@SpringBootApplication
+public class Application {
 
     public static void main(String[] args) {
-        Spring어플리케이션.run(어플리케이션.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }
 ----
 
-`@SpringBoot어플리케이션` 은 다음을 모두 추가하는 편리한 주석이다:
+`@SpringBootApplication` 은 다음을 모두 추가하는 편리한 주석이다:
 
 * `@Configuration` 은 클래스를 어플리케이션 context의 bean 정의 소스로 태그 지정한다.
 * `@EnableAutoConfiguration` 은 Spring Boot에게 클래스 경로 설정, 다른 bean 및 다양한 프로퍼티 설정을 기반으로 bean 추가를 시작하도록 한다.
