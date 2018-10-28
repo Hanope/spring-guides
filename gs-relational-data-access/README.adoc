@@ -1,0 +1,339 @@
+== Spring에서 JDBC를 사용하여 관계형 데이터 액세스하기
+이 가이드는 Spring에서 관계형 데이터를 액세스하는 과정을 안내한다.
+
+== 무엇을 만들게 되는가
+Spring의 `JdbcTemplate` 을 사용하여 관계형 데이터베이스에 저장된 데이터에 액세스하는 어플리케이션을 만들 것이다.
+
+== 무엇이 필요한가
+* 약 15분
+* 선호하는 텍스트 에디터 혹은 IDE
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.8] 혹은 그 이상
+* http://www.gradle.org/downloads[Gradle 4+] 혹은 https://maven.apache.org/download.cgi[Maven 3.2+]
+* 코드를 IDE로 직접 가져올 수도 있다.
+** http://spring.io/guides/gs/sts[Spring Tool Suite (STS)]
+** http://spring.io/guides/gs/intellij-idea/[IntelliJ IDEA]
+
+== 이 가이드를 완료하는 방법
+대부분의 http://spring.io/guides[Spring Getting Started] 가이드와 마찬가지로, 처음부터 시작하여 각 단계를 완료하거나 이미 익숙한 기본 설정 단계를 건너뛸 수 있다. 어느 쪽이든 코드가 작동한다.
+
+처음부터 시작하려면 <<build-with-gradle>>로 이동하시오.
+
+기본 사항을 건너뛰려면 다음을 수행하라:
+
+* 이 가이드의 소스 저장소를 https://github.com/spring-guides/gs-relational-data-access/archive/master.zip[다운로드]하여 압축을 풀거나 http://spring.io/understanding/Git[Git]: `git clone https://github.com/spring-guides/gs-relational-data-access.git` 을 사용하여 clone 하시오.
+* cd into `gs-relational-data-access/initial`
+* <<create-a-customer-object>>로 넘어가시오.
+
+**끝나면** `gs-relational-data-access/complete` 코드와 결과를 비교할 수 있다.
+
+[[build-with-gradle]]
+== Gradle로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만 http://gradle.org/[Gradle] 및 https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. 둘다 익숙하지 않은 경우 http://spring.io/guides/gs/gradle[Gradle로 Java 프로젝트 만들기] 또는 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+=== Gradle 빌드 파일 만들기
+아래는 https://github.com/spring-guides/gs-relational-data-access/blob/master/initial/build.gradle[초기 Gradle 빌드 파일]이다.
+
+`build.gradle`
+
+[source,gradle,indent=0]
+----
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'gs-relational-data-access'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework:spring-jdbc")
+    compile("com.h2database:h2")
+    testCompile("junit:junit")
+}
+----
+
+https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html[Spring Boot Gralde 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== Maven으로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만  https://maven.apache.org/[Maven]으로 작업하는 데 필요한 코드가 여기에 있다. Maven이 익숙하지 않은 경우 http://spring.io/guides/gs/maven[Maven으로 Java 프로젝트 만들기]를 참조하시오.
+
+=== 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 mkdir -p src/main/java/hello를 사용하여 다음 하위 디렉토리 구조를 작성한다:
+
+[source,indent=0]
+----
+└── src
+    └── main
+        └── java
+            └── hello
+----
+
+`pom.xml`
+
+[source,xml,indent=0]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework</groupId>
+    <artifactId>gs-relational-data-access</artifactId>
+    <version>0.1.0</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.5.RELEASE</version>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+----
+
+https://docs.spring.io/spring-boot/docs/current/maven-plugin[Spring Boot Maven 플러그인]은 다음과 같은 여러 편리한 기능을 제공한다:
+
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml[Spring Boot 의존성]과 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
+
+== IDE로 빌드하기
+* http://spring.io/guides/gs/sts/[Spring Tool Suite]에서 import 하는 가이드를 읽으시오.
+* http://spring.io/guides/gs/intellij-idea[IntelliJ IDEA]에서 가이드를 읽으시오.
+
+[[create-a-customer-object]]
+== Customer 객체 만들기
+아래에서 작업할 간단한 데이터 액세스 로직은 고객의 이름과 성을 관리한다. 이 데이터를 어플리케이션 수준에서 표시하려면 고객 클래스를 생성하시오.
+
+`src/main/java/hello/Customer.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+public class Customer {
+    private long id;
+    private String firstName, lastName;
+
+    public Customer(long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Customer[id=%d, firstName='%s', lastName='%s']",
+                id, firstName, lastName);
+    }
+
+    // getters & setters omitted for brevity
+}
+----
+
+== 데이터 저장 및 검색
+Spring은 SQL 관계형 데이터베이스 및 JDBC에서 쉽게 작업할 수 있도록 `JdbcTemplate` 이라는 템플릿 클래스를 제공한다. 대부분의 JDBC 코드는 리소스 확보, 연결 관리, 예외 처리 및 코드 오류와는 전혀 관련이 없는 일반적인 오류 검사에 빠져있다. `JdbcTemplate` 은 이 모든 것을 처리한다. 당신이 할 일은 당면한 일에 집중하는 것 뿐이다.
+
+`src/main/java/hello/Application.java`
+
+[source,java,indent=0]
+----
+package hello;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@SpringBootApplication
+public class Application implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+    public static void main(String args[]) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @Override
+    public void run(String... strings) throws Exception {
+
+        log.info("Creating tables");
+
+        jdbcTemplate.execute("DROP TABLE customers IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE customers(" +
+                "id SERIAL, first_name VARCHAR(255), last_name VARCHAR(255))");
+
+        // Split up the array of whole names into an array of first/last names
+        List<Object[]> splitUpNames = Arrays.asList("John Woo", "Jeff Dean", "Josh Bloch", "Josh Long").stream()
+                .map(name -> name.split(" "))
+                .collect(Collectors.toList());
+
+        // Use a Java 8 stream to print out each tuple of the list
+        splitUpNames.forEach(name -> log.info(String.format("Inserting customer record for %s %s", name[0], name[1])));
+
+        // Uses JdbcTemplate's batchUpdate operation to bulk load data
+        jdbcTemplate.batchUpdate("INSERT INTO customers(first_name, last_name) VALUES (?,?)", splitUpNames);
+
+        log.info("Querying for customer records where first_name = 'Josh':");
+        jdbcTemplate.query(
+                "SELECT id, first_name, last_name FROM customers WHERE first_name = ?", new Object[] { "Josh" },
+                (rs, rowNum) -> new Customer(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"))
+        ).forEach(customer -> log.info(customer.toString()));
+    }
+}
+----
+
+`@SpringBootApplication` 은 다음을 모두 추가하는 편리한 주석이다:
+
+* `@Configuration` 은 클래스를 어플리케이션 context의 bean 정의 소스로 태그 지정한다.
+* `@EnableAutoConfiguration` 은 Spring Boot에게 클래스 경로 설정, 다른 bean 및 다양한 프로퍼티 설정을 기반으로 bean 추가를 시작하도록 한다.
+* `@ComponentScan` 은 `hello` 패키지에서 다른 컴포넌트, 구성 및 서비스를 찾아서 컨트롤러를 찾을 수 있도록 Spring에 지시한다. 이 경우에는, 아무것도 없다.
+
+`main()` 메소드는 `Spring Boot의 SpringApplicaiton.run()` 메소드를 사용하여 어플리케이션을 시작한다. 한줄의 XML이 없다는 것을 알고 있었는가? **web.xml** 파일도 없다. 이 웹 어플리케이션은 100% 순수 자바이며 인프라 구성에 대해 다룰 필요가 없다.
+
+Spring Boot는 in-memory 관계형 데이터베이스 엔진인 **H2**를 지원하고 자동으로 연결을 생성한다. **spring-jdbc**를 사용하기 때문에 Spring Boot는 자동으로 `JdbcTemplate` 을 생성한다. `@Autowired JdbcTemplate` 필드는 자동으로 이 필드를 로드하여 사용할 수 있게 한다.
+
+이 `Application` 클래스는 Spring Boot의 `CommandLineRunner` 를 구현한다. 즉, 어플리케이션 컨텍스트가 로드된 후 `run()` 메소드를 실행한다.
+
+먼저, `JdbcTemplate의 `execute` 메소드를 사용하여 DDL을 실행한다.
+
+둘째, 문자열 리스트를 가져와 Java 8 스트림을 사용하여 Java 배열의 firstname/lastname 쌍으로 분리한다.
+
+그런 다음 `JdbcTemplate의 `batchUpdate` 메소드를 사용하여 새로 생생된 테이블에 레코드를 추가한다. 메소드 호출의 첫 번째 인수는 쿼리 문자열이며, 마지막 인수(`Object` 배열)는 "?" 문자가 있는 쿼리에 대체할 변수이다.
+
+====
+단일 insert의 경우, `JdbcTemplate의 `insert` 메소드가 좋다. 그러나 여러개의 insert일 경우 `batchUpdate` 를 사용하는 것이 좋다.
+====
+
+====
+변수에 바인드하도록 JDBC에 지시하여 https://en.wikipedia.org/wiki/SQL_injection[SQL injection 공격]을 피하기 위해 인수에 `?` 를 사용하시오.
+====
+
+마지막으로 `query` 메소드를 사용하여 테이블에서 조건과 일치하는 레코드를 검색한다. 다시 "?" 인수를 사용하여 쿼리 매개 변수를 만들고 호출할 때 실제 값을 전달한다. 마지막 인수는 각 결과 행을 새 `Customer` 객체로 변환하는 데 사용되는 Java 8 람다이다.
+
+====
+Java 8 람다는 Spring의 `RowMapper` 와 같은 단일 메소드 인터페이스에 잘 매핑된다. Java 7 이전 버전을 사용하는 경우 익명 인터페이스 구현을 쉽게 플러그인할 수 있으며, 람다 expresion의 본문과 동일한 메소드 본문을 가질 수 있으며 Spring의 방해 없이 작동한다.
+====
+
+=== 실행 가능한 JAR 만들기
+Gradle 또는 Maven을 사용하여 커맨드 라인에서 어플리케이션을 실행할 수 있다. 또는 모든 필요한 의존성, 클래스 및 리소스 포함하는 단일 실행 가능한 JAR 파일을 빌드하고 실행할 수 있다. 따라서 개발 생명주기(life cycle), 다양한 환경에 걸쳐 어플리케이션으로 서비스를 쉽게 제공 및 배포할 수 있다.
+
+Gradle을 사용하는 경우 `./gradlew bootRun` 을 사용하여 어플리케이션을 실행할 수 있다. 또는 `./gradlew build` 를 사용하여 JAR 파일을 작성할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar build/libs/gs-relational-data-access-0.1.0.jar
+----
+
+Maven을 사용하는 경우 ./mvnw spring-boot:run을 사용하여 어플리케이션을 실행할 수 있다. 또는 ./mvnw clean package로 JAR 파일을 빌드할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
+
+[source,bash,indent=0]
+----
+java -jar target/gs-relational-data-access-0.1.0.jar
+----
+
+====
+위 절차는 실행 가능한 JAR를 생성한다. 고전의 http://spring.io/guides/gs/convert-jar-to-war/[WAR 파일을 빌드]하도록 선택할 수도 있다.
+====
+
+다음 출력을 볼 수 있다:
+
+[source,indent=0]
+----
+2015-06-19 10:58:31.152  INFO 67731 --- [           main] hello.Application                        : Creating tables
+2015-06-19 10:58:31.219  INFO 67731 --- [           main] hello.Application                        : Inserting customer record for John Woo
+2015-06-19 10:58:31.220  INFO 67731 --- [           main] hello.Application                        : Inserting customer record for Jeff Dean
+2015-06-19 10:58:31.220  INFO 67731 --- [           main] hello.Application                        : Inserting customer record for Josh Bloch
+2015-06-19 10:58:31.220  INFO 67731 --- [           main] hello.Application                        : Inserting customer record for Josh Long
+2015-06-19 10:58:31.230  INFO 67731 --- [           main] hello.Application                        : Querying for customer records where first_name = 'Josh':
+2015-06-19 10:58:31.242  INFO 67731 --- [           main] hello.Application                        : Customer[id=3, firstName='Josh', lastName='Bloch']
+2015-06-19 10:58:31.242  INFO 67731 --- [           main] hello.Application                        : Customer[id=4, firstName='Josh', lastName='Long']
+2015-06-19 10:58:31.244  INFO 67731 --- [           main] hello.Application                        : Started Application in 1.693 seconds (JVM running for 2.054)
+----
+
+== 요약
+축하합니다! 방금 Spring을 사용하여 간단한 JDBC 클라이언트를 개발했다.
+
+====
+Spring Boot에는 connection pool을 구성하고 커스터마이징을 위한 많은 기능이 있다 (예: in-memory 대신 외부 데이터베이스에 연결). 자세한 내용은 https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#boot-features-configure-datasource[사용자 가이드]를 참조하시오.
+====
+
+== 다른 예제들
+다음 가이드들도 도움이 될 것이다:
+
+* https://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA]
+* https://spring.io/guides/gs/accessing-data-mongodb/[Accessing Data with MongoDB]
+* https://spring.io/guides/gs/accessing-data-gemfire/[Accessing Data with GemFire]
+* https://spring.io/guides/gs/accessing-data-neo4j/[Accessing Data with Neo4j]
+* https://spring.io/guides/gs/accessing-data-mysql/[Accessing data with MySQL]
+* https://spring.io/guides/gs/spring-boot/[Building an Application with Spring Boot]
