@@ -1,48 +1,48 @@
-## Deploying a Spring Boot app to Azure
-This article walks you through deploying an application to Azure.
+## Spring Boot 앱을 Azure에 배포 해 보기
+이 글은 어플리케이션을 Azure에 배포하는 방법을 보여줍니다.
 
-## What you’ll build
-You’ll clone a sample Spring Boot application from GitHub and then use Maven to deploy it to Azure.
+## 무엇을 만들게 되는가?
+GitHub에서 하나의 샘플 Spring Boot 어플리케이션을 복제한 후, Maven을 이용해서 Azure로 배포하게 됩니다.
 
-## What you’ll need
-The following prerequisites are required in order to follow the steps in this article:
+## 무엇이 필요한가?
+이 글의 단계들을 따라하기 위해선 다음의 전제조건들이 요구됩니다:
 
-* An Azure subscription. If you don’t already have an Azure subscription, you can sign up for a [free Azure account](https://azure.microsoft.com/pricing/free-trial/) or activate your [MSDN subscriber benefits](https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/).
-* The [Azure Command-Line Interface (CLI)](http://docs.microsoft.com/cli/azure/overview).
-* An up-to-date [Java Development Kit (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/), version 1.8 or later.
-* A [Git](https://github.com/) client.
+* Azure 서비스 가입. 아직 Azure 서비스에 가입하지 않았다면, [무료 Azure 계정](https://azure.microsoft.com/pricing/free-trial/) 에서 가입을 하거나 [MSDN 서비스 가입자 혜택](https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/) 를 통한 활성화.
+* [Azure 터미널 명령 인터페이스(CLI)](http://docs.microsoft.com/cli/azure/overview).
+* 최신의 [Java Development Kit(JDK)](http://www.oracle.com/technetwork/java/javase/downloads/), 버전은 1.8 또는 그 이상.
+* [Git](https://github.com/) 클라이언트.
 
-## Create a sample Spring Boot web app
-In this section, you will clone an already written Spring Boot application and test it locally:
+## 샘플 Spring Boot 웹앱 만드는 과정
+본 섹션에서는 이미 작성된 Spring Boot 어플리케이션을 복제한 후, 로컬 환경에서 테스트 하게 됩니다:
 
-1. Open a terminal window.
+1. 터미널 창을 엽니다.
 
-2. Create a local directory to hold your Spring Boot application by typing `mkdir SpringBoot`
+2. `mkdir SpringBoot` 명령으로 Spring Boot 어플리케이션이 저장될 로컬 디렉토리를 생성합니다.
 
-3. Change to that directory by typing `cd SpringBoot`.
+3. `cd SpringBoot` 명령으로 해당 디렉토리로 이동합니다.
 
-4. Clone the [Spring Boot Getting Started](https://github.com/microsoft/gs-spring-boot) sample project into the directory you created by typing `git clone https://github.com/microsoft/gs-spring-boot`
+4. `git clone https://github.com/microsoft/gs-spring-boot` 명령으로 [Spring Boot Getting Started](https://github.com/microsoft/gs-spring-boot)라는 샘플 프로젝트를, 방금 생성한 디렉토리에 복제하여 넣습니다.
 
-5. Change to the directory of the completed project by typing `cd gs-spring-boot/complete`
+5. `cd gs-spring-boot/complete` 명령으로 완료된 프로젝트가 존재하는 디렉토리로 이동합니다.
 
-6. Build the JAR file using Maven by typing `./mvnw clean package`
+6. `./mvnw clean package` 명령으로 Maven을 사용하여 JAR 파일을 빌드 합니다.
 
-7. When the web app has been created, start it by typing `./mvnw spring-boot:run`
+7. 웹앱이 생성되면, `./mvnw spring-boot:run` 명령으로 해당 웹앱을 실행합니다.
 
-8. Test it locally by either visiting http://localhost:8080 or typing `curl http://localhost:8080` from another terminal window.
+8. http://localhost:8080 을 방문하거나, 또 다른 터미널 창에서 `curl http://localhost:8080` 명령을 수행하여 로컬환경에서 테스트 합니다.
 
-9. You should see the following message displayed: **Greetings from Spring Boot!**
+9. 그러면 다음과 같은 메세지가 출력됨이 확인 되어야만 합니다: **Greetings from Spring Boot!**
 
-## Create an Azure service principal
-In this section, you will create an [Azure service principal](https://cmatskas.com/service-principals-in-microsoft-azure/) that the Maven plugin uses when deploying your web app to Azure.
+## Azure service principal를 생성하는 단계
+본 섹션에서는 웹앱을 Azure로 배포시 Maven 플러그인이 사용하는 [Azure service principal](https://cmatskas.com/service-principals-in-microsoft-azure/)를 생성하게 됩니다.
 
-1. Open a terminal window.
+1. 터미널 창을 엽니다.
 
-2. Sign into your Azure account with the Azure CLI by typing `az login`
+2. `az login` 라는 Azure CLI 명령으로 Azure 계정에 로그인 합니다.
 
-3. Create an Azure service principal by typing `az ad sp create-for-rbac --name "uuuuuuuu" --password "pppppppp" `(`uuuuuuuu` is the user name and `pppppppp` is the password for the service principal).
+3. `az ad sp create-for-rbac --name "uuuuuuuu" --password "pppppppp" `(`uuuuuuuu`와 `pppppppp`는 service principal에 대한 사용자이름과 비밀번호 입니다) 명령으로 Azure service principal을 생성합니다.
 
-    Azure should print out a JSON response resembling this:
+   그러면, Azure는 아래와 닮은 JSON 응답을 출력 해야만 합니다:
 
     ```json
     {
@@ -54,14 +54,14 @@ In this section, you will create an [Azure service principal](https://cmatskas.c
     }
     ```
 
-> Note the values as they are to be used further down.
+> 값들은 아래쪽에서 계속해서 사용됨을 알아두세요.
 
-## Configure Maven to use your Azure service principal
-In this section, you will configure Maven to authenticate using your Azure service principal for web app deployment.
+## Azure service principal을 사용하기 위한 Maven을 설정하는 단계
+본 섹션에서는 웹앱 배포를 위한 Azure service principal 사용을 인증하는데 있어서, Maven을 설정하게 됩니다.
 
-1. Open your Maven `settings.xml` file in a text editor (usually found at either `/etc/maven/settings.xml` or `$HOME/.m2/settings.xml`).
+1. Maven의 `settings.xml` 파일을 텍스트 편집기로 엽니다 (보통 `/etc/maven/settings.xml` 또는 `$HOME/.m2/settings.xml`에 위치해 있습니다).
 
-2. Add your Azure service principal settings from the previous section of this tutorial to the `<servers>` collection in the **settings.xml** file as shown below:
+2. 아래 처럼, 본 튜토리얼의 직전 세션내용에 기반하여 Azure service principal 에 대한 설정을 **settings.xml** 파일 내용 중 `<servers>` 컬렉션에 추가하여 줍니다:
 
 ```xml
 <servers>
@@ -77,28 +77,28 @@ In this section, you will configure Maven to authenticate using your Azure servi
 </servers>
 ```
 
-3. Save and close the **settings.xml** file.
+3. 저장하고, **settings.xml** 파일을 닫습니다.
 
-> See [Maven Plugin for Azure Web Apps](https://github.com/Microsoft/azure-maven-plugins/tree/master/azure-webapp-maven-plugin) for documentation.
+> [Azure 웹앱을 위한 Maven 플러그인](https://github.com/Microsoft/azure-maven-plugins/tree/master/azure-webapp-maven-plugin) 도큐먼트를 확인해 보세요.
 
-## Build and deploy your app to Azure
-Once you have configured all of the settings in the preceding sections, you are ready to deploy your web app to Azure.
+## 웹앱을 빌드하고 Azure로 배포하는 단계
+앞 섹션들의 모든 설정을 완료 했다면, 웹앱을 Azure로 배포할 준비가 되었습니다.
 
-From the terminal window, deploy your web app to Azure with Maven by typing `./mvnw azure-webapp:deploy`. (Maven will deploy your web app to Azure using a plugin already in the build file of the sample project you cloned earlier. If the web app doesn’t already exist, it will be created.)
+터미널 창에서, `./mvnw azure-webapp:deploy` 명령으로 웹앱을 Maven을 이용하여 Azure로 배포합니다. (Maven이 복제한 샘플 프로젝트의 빌드 파일에 이미 포함되어 있는, 플러그인을 사용하여 웹앱을 Azure로 배포하게 됩니다. 만약 웹앱이 존재하지 않는다면, 해당 명령이 이를 생성하게 됩니다.)
 
-When your web app has been deployed, visit the [Azure portal](https://portal.azure.com/) to manage it. It will be listed in **App Services** as show below:
+웹앱이 배포되면, 이를 관리하기 위해서 [Azure 포탈](https://portal.azure.com/)에 접속합니다. 다음과 같이 **App Services** 에 리스트업 될 것입니다:
 
 ![](http://spring.io/guides/gs/spring-boot-for-azure/AP01.png)
-Click on the application. From there, the publicly-facing URL for your web app will be listed in the **Overview** section:
+해당 어플리케이션을 클릭합니다. 그러면, 웹앱을 퍼블릭에서 접근 가능한 URL이 **Overview** 섹션에 리스트업 될 것입니다.
 
 ![](http://spring.io/guides/gs/spring-boot-for-azure/AP02.png)
-You can click on this link to visit the Spring Boot application and interact with it.
+해당 링크를 클릭하면, Spring Boot 어플리케이션을 방문하고 상호작용 할 수 있습니다.
 
-## Summary
-Congratulations! You built and deployed a Spring Boot app to Azure.
+## 요약
+축하드립니다! Spring Boot 앱을 빌드하고 Azure로 배포 하였습니다.
 
-## See also
-Additional information about using Spring with Azure is available here:
+## 추가로 볼만한 것
+Azure와 Spring사용법에 대한 추가적인 정보는 아래에서 찾아볼 수 있습니다:
 
-* [Spring on Azure](https://docs.microsoft.com/java/azure/spring-framework/)
-* [Deploying a Spring Boot app to the cloud using the Maven Plugin for Azure Web Apps](https://docs.microsoft.com/java/azure/spring-framework/deploy-spring-boot-java-app-with-maven-plugin)
+* [Azure에서의 Spring](https://docs.microsoft.com/java/azure/spring-framework/)
+* [Azure 웹 앱을 위하여 Maven 플러그인을 사용한 Spring Boot 앱의 클라우드 배포 방법](https://docs.microsoft.com/java/azure/spring-framework/deploy-spring-boot-java-app-with-maven-plugin)
