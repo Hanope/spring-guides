@@ -1,39 +1,39 @@
 ## Messaging with Redis
-This guide walks you through the process of using Spring Data Redis to publish and subscribe to messages sent via Redis.
+이 가이드는 Spring Data Redis를 사용하여 Redis를 통해 전송된 메시지를 게시하고 구독하는 과정을 안내한다.
 
-## What you’ll build
-You’ll build an application that uses `StringRedisTemplate` to publish a string message and has a [POJO](http://spring.io/understanding/POJO) subscribe for it using `MessageListenerAdapter`.
+## 무엇을 만들게 되는가
+`StringRedisTemplate`을 사용하여 문자열 메시지를 게시하고 `MessageListenerAdapter`를 사용하여 [POJO](http://spring.io/understanding/POJO)를 구독하는 어플리케이션을 만들 것이다.
 
-> It may sound strange to be using Spring Data Redis as the means to publish messages, but as you’ll discover, Redis not only provides a NoSQL data store, but a messaging system as well.
+> Spring Data Redis를 메시지 게시 수단으로 사용하는 것이 이상하게 들릴 수도 있지만, 보시다시피 Redis는 NoSQL 데이터 저장소뿐만 아니라 메시징 시스템도 제공한다.
 
-## What you’ll need
-* About 15 minutes
-* A favorite text editor or IDE
-* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later
-* [Gradle 4+](http://www.gradle.org/downloads) or [Maven 3.2+](https://maven.apache.org/download.cgi)
-* You can also import the code straight into your IDE:
+## 무엇이 필요한가
+* 약 15분
+* 선호하는 텍스트 에디터 혹은 IDE
+* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 혹은 그 이상
+* [Gradle 4+](http://www.gradle.org/downloads) 혹은 [Maven 3.2+](https://maven.apache.org/download.cgi)
+* 코드를 IDE로 직접 가져올 수도 있다:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
-    - Redis server (installation instructions below)
+    - Redis server (아래 설치 지침)
 
-## How to complete this guide
-Like most Spring [Getting Started guides](http://spring.io/guides), you can start from scratch and complete each step, or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+## 이 가이드를 완료하는 방법
+대부분의 [Spring Getting Started](http://spring.io/guides) 가이드와 마찬가지로, 처음부터 시작하여 각 단계를 완료하거나 이미 익숙한 기본 설정 단계를 건너뛸 수 있다. 어느 쪽이든 코드가 작동한다.
 
-To **start from scratch**, move on to [Build with Gradle](#build-with-gradle).
+**처음부터 시작하려면** [Gradle로 빌드하기](#Gradle로-빌드하기)로 이동하시오.
 
-To **skip the basics**, do the following:
+**기본 사항을 건너뛰려면** 다음을 수행하시오:
 
-* [Download](https://github.com/spring-guides/gs-messaging-redis/archive/master.zip) and unzip the source repository for this guide, or clone it using [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-messaging-redis.git`
+* 이 가이드의 소스 저장소를 [다운로드](https://github.com/spring-guides/gs-messaging-redis/archive/master.zip)하여 압축을 풀거나 [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-messaging-redis.git` 을 사용하여 clone 하시오.
 * cd into `gs-messaging-redis/initial`
-* Jump ahead to [Create a Redis message receiver](#create-a-redis-message-receiver).
+* [Redis message receiver 만들기](#Redis-message-receiver-만들기)로 넘어가시오.
 
-**When you’re finished**, you can check your results against the code in `gs-messaging-redis/complete`.
+**끝나면**, `gs-messaging-redis/complete` 코드와 결과를 비교할 수 있다.
 
-## Build with Gradle
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Gradle](http://gradle.org/) and [Maven](https://maven.apache.org/) is included here. If you’re not familiar with either, refer to [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) or [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Gradle로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만 [Gradle](http://gradle.org/) 및 [Maven](https://maven.apache.org/)으로 작업하는 데 필요한 코드가 여기에 있다. 둘다 익숙하지 않은 경우 [Gradle로 Java 프로젝트 만들기](http://spring.io/guides/gs/gradle) 또는 [Maven으로 Java 프로젝트 만들기](http://spring.io/guides/gs/maven)를 참조하시오.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 `mkdir -p src/main/java/hello` 를 사용하여 다음 하위 디렉토리 구조를 작성한다:
 
 ```
 └── src
@@ -42,8 +42,8 @@ In a project directory of your choosing, create the following subdirectory struc
             └── hello
 ```
 
-### Create a Gradle build file
-Below is the [initial Gradle build file](https://github.com/spring-guides/gs-messaging-redis/blob/master/initial/build.gradle).
+### Gradle 빌드 파일 만들기
+아래는 [초기 Gradle 빌드 파일](https://github.com/spring-guides/gs-messaging-redis/blob/master/initial/build.gradle)이다.
 
 `build.gradle`
 
@@ -82,17 +82,17 @@ dependencies {
 }
 ```
 
-The [Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html) provides many convenient features:
+[Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html)은 다음과 같은 여러 편리한 기능을 제공한다:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)와 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
 
-## Build with Maven
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org/) is included here. If you’re not familiar with Maven, refer to [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Maven으로 빌드하기
+먼저 기본 빌드 스크립트를 설정한다. Spring으로 app을 만들 때 원하는 빌드 시스템을 사용할 수 있지만 [Maven](https://maven.apache.org/)으로 작업하는 데 필요한 코드가 여기에 있다. Maven이 익숙하지 않은 경우 [Maven으로 Java 프로젝트 만들기](http://spring.io/guides/gs/maven)를 참조하시오.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 *nix 시스템의 `mkdir -p src/main/java/hello`를 사용하여 다음 하위 디렉토리 구조를 작성한다:
 
 ```
 └── src
@@ -161,32 +161,32 @@ In a project directory of your choosing, create the following subdirectory struc
 </project>
 ```
 
-The [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin) provides many convenient features:
+[Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin)은 다음과 같은 여러 편리한 기능을 제공한다:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 클래스 경로에 있는 모든 jar를 모으고 서비스를 전송하고 실행하는데 좀 더 편하게 만들어주는 실행 가능한 "über-jar"를 빌드한다.
+* `public static void main()` 메소드를 검색하여 실행 가능 클래스로 플래그를 지정한다.
+* [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)와 일치하도록 버전 번호를 설정하는 빌트인 의존성 리졸버를 제공한다. 모든 버전을 재정의할 수 있지만 기본적으로 Boot에서 선택한 버전으로 설정된다.
 
-## Build with your IDE
-* Read how to import this guide straight into [Spring Tool Suite](http://spring.io/guides/gs/sts/).
-* Read how to work with this guide in [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea).
+## IDE로 빌드하기
+* [Spring Tool Suite](http://spring.io/guides/gs/sts/)에서 import 하는 가이드를 읽으시오.
+* [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)에서 가이드를 읽으시오.
 
-## Standing up a Redis server
-Before you can build a messaging application, you need to set up the server that will handle receiving and sending messages.
+## Redis server 시작하기
+메시징 어플리케이션을 빌드하기 전에 메시지 수신 및 송신을 처리할 서버를 설정해야 한다.
 
-Redis is an open source, BSD-licensed, key-value data store that also comes with a messaging system. The server is freely available at http://redis.io/download. You can download it manually, or if you use a Mac with homebrew:
+Redis는 메시징 시스템과 함께 제공되는 BSD 라이센스의 key-value 데이터 스토어 오픈소스이다. 이 서버는 https://redis.io/download 에서 무료로 사용할 수 있다. 수동으로 다운로드하거나 homebrew가 설치된 Mac을 사용하는 경우 다음을 입력하여 사용할 수 있다:
 
 ```
 brew install redis
 ```
 
-Once you unpack Redis, you can launch it with default settings.
+Redis 압축을 풀면 기본 설정으로 시작할 수 있다.
 
 ```
 redis-server
 ```
 
-You should see a message like this:
+다음과 같은 메시지가 나타난다.
 
 ```
 [35142] 01 May 14:36:28.939 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
@@ -213,8 +213,8 @@ You should see a message like this:
 [35142] 01 May 14:36:28.941 * The server is now ready to accept connections on port 6379
 ```
 
-## Create a Redis message receiver
-In any messaging-based application, there are message publishers and messaging receivers. To create the message receiver, implement a receiver with a method to respond to messages:
+## Redis message receiver 만들기
+메시징 기반 어플리케이션에는 메시지 게시자와 메시징 수신자가 있다. 메시지 수신자(receiver)를 작성하려면 메시지에 응답하는 메소드가 있는 수신자(receiver)를 구현하시오.
 
 `src/main/java/hello/Receiver.java`
 
@@ -244,20 +244,20 @@ public class Receiver {
 }
 ```
 
-The `Receiver` is a simple POJO that defines a method for receiving messages. As you’ll see when you register the `Receiver` as a message listener, you can name the message-handling method whatever you want.
+`Receiver`는 메시지를 수신하는 메소드를 정의하는 간단한 POJO이다. `Receiver`를 메시지 리스너로 등록할 때 볼 수 있듯이, 원하는대로 message-handling 메소드의 이름을 지정할 수 있다.
 
-> For demonstration purposes, it is autowired by its constructor with a countdown latch. That way, it can signal when it has received a message.
+> 시연용에는 countdown latch가 생성자에 의해 autowired 된다. 이렇게하면 메시지를 받았을 때 신호를 보낼 수 있다.
 
-## Register the listener and send a message
-Spring Data Redis provides all the components you need to send and receive messages with Redis. Specifically, you need to configure:
+## listener 등록 및 메시지 보내기
+Spring Data Redis는 Redis를 사용하여 메시지를 주고받는 데 필요한 모든 컴포넌트를 제공한다. 특히, 다음을 구성해야 한다:
 
-* A connection factory
-* A message listener container
-* A Redis template
+* connection factory
+* message listener container
+* Redis template
 
-You’ll use the Redis template to send messages and you will register the `Receiver` with the message listener container so that it will receive messages. The connection factory drives both the template and the message listener container, enabling them to connect to the Redis server.
+Redis template을 사용하여 메시지를 보내고 message listener container에 `Receiver`를 등록하여 메시지를 수신한다. connection factory는 템플릿과 message listner container를 모두 구동하여 Redis 서버에 연결할 수 있도록 한다.
 
-This example uses Spring Boot’s default `RedisConnectionFactory`, an instance of `JedisConnectionFactory` which is based on the [Jedis](https://github.com/xetorthio/jedis) Redis library. The connection factory is injected into both the message listener container and the Redis template.
+이 예제는 [Jedis](https://github.com/xetorthio/jedis) Redis 라이브러리를 기반으로 하는 `JedisConnectionFactory`의 인스턴스인 Spring Boot의 기본 `RedisConnectionFactory`를 사용한다. connection factory는 message listener container와 Redis template에 주입된다.
 
 `src/main/java/hello/Application.java`
 
@@ -331,30 +331,30 @@ public class Application {
 }
 ```
 
-The bean defined in the `listenerAdapter` method is registered as a message listener in the message listener container defined in `container` and will listen for messages on the "chat" topic. Because the `Receiver` class is a POJO, it needs to be wrapped in a message listener adapter that implements the `MessageListener` interface required by `addMessageListener()`. The message listener adapter is also configured to call the `receiveMessage()` method on `Receiver` when a message arrives.
+`listenerAdapter` 메소드에 정의된 bean은 `conatiner`에 정의된 message listener container에 메시지 리스너로 등록되고 "chat" 토픽의 메시지를 청취한다. `Receiver` 클래스는 POJO이므로, `addMessageListener()`에 의해 요구된 `MessageListener` 인터페이스를 구현하는 message listener adapter에 래핑되어야 한다. 또한 message listener adapter는 메시지가 도착할 때 `Receiver`에 대해 `receiveMessage()` 메소드를 호출하도록 구성된다.
 
-The connection factory and message listener container beans are all you need to listen for messages. To send a message you also need a Redis template. Here, it is a bean configured as a `StringRedisTemplate`, an implementation of `RedisTemplate` that is focused on the common use of Redis where both keys and values are 'String's.
+connection factory와 message listener container bean만 있으면 메시지를 수신할 수 있다. 메시지를 보내려면 Redis template도 필요하다. key와 value가 모두 `String`인 Redis의 일반적인 사용에 초첨을 맞춘 `RestTemplate`을 구현하는 `StringRedisTemplate`으로 구성된 빈이 있다.
 
-The `main()` method kicks everything off by creating a Spring application context. The application context then starts the message listener container, and the message listener container bean starts listening for messages. The `main()` method then retrieves the `StringRedisTemplate` bean from the application context and uses it to send a "Hello from Redis!" message on the "chat" topic. Finally, it closes the Spring application context and the application ends.
+`main()` 메소드는 Spring application context를 생성하여 모든 것을 작동시킨다. application context는 message listener container를 시작하고 message listener container bean은 메시지 수신을 시작한다. `main()` 메소드는 application context에서 `StringRedisTemplate` bean을 검색하고 그것을 사용하여 "chat" 토픽에 "Hello from Redis!" 메시지를 보내는 데 사용한다. 마지막으로, Spring application context를 닫고 어플리케이션이 종료된다.
 
-## Build an executable JAR
-You can run the application from the command line with Gradle or Maven. Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+## 실행 가능한 JAR 만들기
+Gradle 또는 Maven을 사용하여 커맨드 라인에서 어플리케이션을 실행할 수 있다. 또는 모든 필요한 의존성, 클래스 및 리소스 포함하는 단일 실행 가능한 JAR 파일을 빌드하고 실행할 수 있다. 따라서 개발 생명주기(life cycle), 다양한 환경에 걸쳐 어플리케이션으로 서비스를 쉽게 제공 및 배포할 수 있다.
 
-If you are using Gradle, you can run the application using `./gradlew bootRun`. Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+Gradle을 사용하는 경우 `./gradlew bootRun`을 사용하여 어플리케이션을 실행할 수 있다. 또는 `./gradlew build`를 사용하여 JAR 파일을 작성할 수 있다. 그런 다음 JAR 파일을 실행할 수 있다:
 
 ```
 java -jar build/libs/gs-messaging-redis-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+Maven을 사용하는 경우, `./mvnw spring-boot:run`을 사용하여 어플리케이션을 실행할 수 있다. 또는 `./mvnw clean package`로 JAR 파일을 빌드할 수 있다. 그런다음 JAR 파일을 실행할 수 있다:
 
 ```
 java -jar target/gs-messaging-redis-0.1.0.jar
 ```
 
-> The procedure above will create a runnable JAR. You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+> 위 절차는 실행 가능한 JAR를 생성한다. 고전의 [WAR 파일을 빌드](http://spring.io/guides/gs/convert-jar-to-war/)하도록 선택할 수도 있다.
 
-You should see the following output:
+다음 출력을 볼 수 있다.:
 
 ```
   .   ____          _            __ _ _
@@ -375,13 +375,13 @@ You should see the following output:
 2014-04-18 08:03:34.380  INFO 47002 --- [       Thread-1] o.s.c.support.DefaultLifecycleProcessor  : Stopping beans in phase 2147483647
 ```
 
-## Summary
-Congratulations! You’ve just developed a simple publish-and-subscribe application with Spring and Redis.
+## 요약
+축하합니다! 방금 Spring과 Redis를 사용하여 간단한 게시(publish)와 구독(subscribe) 어플리케이션을 개발했다.
 
-> [Redis support](http://gopivotal.com/products/redis) is available.
+> [Redis support](http://gopivotal.com/products/redis)를 사용할 수 있다.
 
-## See Also
-The following guides may also be helpful:
+## 다른 예제들
+다음 가이드들도 도움이 될 것이다:
 
 * [Messaging with RabbitMQ](https://spring.io/guides/gs/messaging-rabbitmq/)
 * [Messaging with JMS](https://spring.io/guides/gs/messaging-jms/)
