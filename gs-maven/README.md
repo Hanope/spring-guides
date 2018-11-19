@@ -65,11 +65,11 @@ public class Greeter {
 ## 초기 설정
 이제 Maven으로 빌드할 준비과 된 프로젝트가 생겼으니, 다음 단계는 Maven을 설치하는 것입니다.
 
-Maven은 http://maven.apache.org/download.cgi에서 zip 파일로 다운로드할 수 있습니다. 바이너리만 필요하므로 apache-maven-{version}-bin.zip 또는 apache-maven-{*version*}-bin.tar.gz에 대한 링크를 찾으십시오.
+Maven은 http://maven.apache.org/download.cgi 에서 zip 파일로 다운로드할 수 있습니다. 바이너리만 필요하므로 apache-maven-{version}-bin.zip 또는 apache-maven-{*version*}-bin.tar.gz에 대한 링크를 찾으십시오.
 
 zip 파일을 다운로드한 다음 컴퓨터에 압축을 풉니다. 그 다음 경로에 bin 폴더를 추가하십시오.
 
-Maven 설치를 테스트하려면 command-line에서 `mvn`을 실항하십시오.
+Maven 설치를 테스트하려면 command-line에서 `mvn`을 실행하십시오.
 
 ```
 mvn -v
