@@ -23,7 +23,6 @@
 **시작부분을 건너뛰실분**은 아래방법을 따라하세요.
 
 * [다운로드](https://github.com/spring-guides/gs-validating-form-input/archive/master.zip) 하시고 압축파일을 풀어주시거나 [GIT](http://spring.io/understanding/Git)을 사용해 복제해주세요 (명령어): `git clone https://github.com/spring-guides/gs-validating-form-input.git`
-
 * 소스의 압축을 해제한 폴더에서 `gs-validating-form-input/initial`로 이동합니다.(cd)
 * [PersonForm 객체만들기](#PersonForm 객체만들기)로 이동합니다.
 
@@ -174,7 +173,7 @@ dependencies {
 * 이 가이드를 STS에 직접 포함하는 방법을 알고싶으면 [Spring Tool Suite](http://spring.io/guides/gs/sts/)을 읽어주세요.
 * 이 가이드를 Intellij IDEA에서 작동시키는 법을 알고싶으면 [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)을 읽어주세요.
 
-## PersonForm 객체만들기
+## PersonForm 객체 만들기
 이 어플리케이션은 사용자의 이름과 나이의 유효성 체크를 포함합니다. 그래서 먼저 사용자를 만들기 위한 폼 클래스를 만들어 보겠습니다.
 
 `src/main/java/hello/PersonForm.java`
@@ -375,7 +374,7 @@ Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 �
 java -jar target/gs-validating-form-input-0.1.0.jar
 ```
 
-> 이 행동은 실행가능한 JAR파일을 만드는 방법입니다. 물론 [WAR파일 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
+> 이 행동은 실행가능한 JAR파일을 만드는 방법입니다. 물론 [WAR파일로 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
 
 이 어플리케이션은 잠시 후 실행됩니다.
 
@@ -397,7 +396,7 @@ java -jar target/gs-validating-form-input-0.1.0.jar
 
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-05.png)
 
-## 결론
+## 마무리
 축하합니다! 유효성을 체크가 내장되어 있는 domain object를 활용하여 간단한 웹 어플리케이션을 만들었습니다. 이 방법대로 하면 데이터가 특정 기준을 충족시키고 사용자가 올바르게 입력했는지 확인할 수 있습니다.
 
 ## 참고
