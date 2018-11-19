@@ -13,13 +13,12 @@
 * 또한 아래의 IDE를 이용해 코드를 바로 불러올 수 있습니다:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
-    - RabbitMQ server (설치지침에 따른)
 
 ## 이 가이드를 완료하는 방법
 대부분의 [스프링 시작 가이드](http://spring.io/guides)처럼 처음부터 하나씩 완성해 가거나
 익숙한 시작 부분은 건너뛰어도 됩니다. 어느 방법을 선택하시더라도 작동되는 코드만 완성시키면 됩니다.
 
-**처음부터 작업하실분**은 [Gradle로 빌드하기](#Gradle로 빌드하기)로 가세요.
+**처음부터 작업하실분**은 [Gradle을 사용한 빌드](#Gradle을 사용한 빌드)로 가세요.
 
 **시작부분을 건너뛰실분**은 아래방법을 따라하세요.
 
@@ -90,16 +89,12 @@ dependencies {
 ```
 
 [Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html)은 많고 편리한 기능을 제공합니다:
-이 플러그인은 클래스패스 위의 jar를 하나의 실행가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
-이 플러그인은 `public static void main()`메소드를 찾아 실행가능한 클래스로 표시를 해줍니다.
-이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다.
-
-여러분이 원하는 버전을 사용할수도 있습니다만 기본적으로 Spring Boot에서 선택한 버전이 기본제공됩니다.
+* 이 플러그인은 클래스패스 위의 jar를 하나의 실행가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
+* 이 플러그인은 `public static void main()`메소드를 찾아 실행가능한 클래스로 표시를 해줍니다.
+* 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다. 여러분이 원하는 버전을 사용할수도 있습니다만 기본적으로 Spring Boot에서 선택한 버전이 기본제공됩니다.
 
 ## Maven을 사용한 빌드
-첫번째로 여러분은 빌드 스크립트를 만들어야 합니다.
-여러분은 스프링 어플리케이션을 빌드할때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다.
-Maven에 익숙하지 않은 경우, [Building Java Projects with Maven](http://spring.io/guides/gs/maven)을 참조하세요.
+첫번째로 여러분은 빌드 스크립트를 만들어야 합니다. 여러분은 스프링 어플리케이션을 빌드할때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다. Maven에 익숙하지 않은 경우, [Building Java Projects with Maven](http://spring.io/guides/gs/maven)을 참조하세요.
 
 ### 폴더 구조 만들기
 프로젝트 폴더를 선택하시고 안에 다음과 같이 하위 폴더를 만들어주세요. 예를 들면, *nix(linux, unix)에서는 `mkdir -p src/main/java/hello`를 입력하면 됩니다.
@@ -176,12 +171,11 @@ Maven에 익숙하지 않은 경우, [Building Java Projects with Maven](http://
 * 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다.
 
 ## 여러분의 IDE를 사용한 빌드하기
-* 이 가이드를 STS에 넣는 방법을 알고싶으면 [Spring Tool Suite](http://spring.io/guides/gs/sts/)을 읽어주세요.
+* 이 가이드를 STS에 직접 포함하는 방법을 알고싶으면 [Spring Tool Suite](http://spring.io/guides/gs/sts/)을 읽어주세요.
 * 이 가이드를 Intellij IDEA에서 작동시키는 법을 알고싶으면 [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)을 읽어주세요.
 
 ## PersonForm 객체만들기
-이 어플리케이션은 사용자의 이름과 나이의 유효성 체크를 포함합니다.
-그래서 먼저 사용자를 만들기 위한 폼 클래스를 만들어 보겠습니다.
+이 어플리케이션은 사용자의 이름과 나이의 유효성 체크를 포함합니다. 그래서 먼저 사용자를 만들기 위한 폼 클래스를 만들어 보겠습니다.
 
 `src/main/java/hello/PersonForm.java`
 
@@ -224,8 +218,7 @@ public class PersonForm {
 }
 ```
 
-작성한 `PersonForm` 클래스는 `name`과 `age`를 가지고 있습니다.
-그리고 이 속성들은 많고 다양한 표준 유효성 어노테이션을 가지고 있습니다:
+작성한 `PersonForm` 클래스는 `name`과 `age`를 가지고 있습니다. 그리고 이 속성들은 많고 다양한 표준 유효성 어노테이션을 가지고 있습니다:
 
 * `@Size(min=2, max=30)`은 이름을 2~30글자만 입력하도록 허용합니다.
 * `@NotNull`은 빈값은 들어올 수 없습니다.
@@ -277,16 +270,15 @@ public class WebController implements WebMvcConfigurer {
 ```
 
 이 컨트롤러는 `/`로 작동하는 GET, POST메소드를 가지고 있습니다.
-`showForm`메소드는 `form` 템플릿을 반환합니다.
-이 템플릿은 `PersonForm`을 연상시켜 템플릿을 반환하게 하는 메소드를 가지고 있습니다.
+
+`showForm`메소드는 `form` 템플릿을 반환합니다. 이 템플릿은 `PersonForm`을 연상시켜 템플릿을 반환하게 하는 메소드를 가지고 있습니다. 
+
 `checkPersonFormInfo` 메소드는 두개의 인수를 받습니다.
 
 * 여러분이 만들 폼 양식에 맞는 속성을 가지고 `@Valid`가 표시된 `personForm` 오브젝트
 * 유효성 에러를 테스트 할 수 있는 `bindingResult`객체
 
-여러분은 폼과 바운드된 `PersonForm`객체로부터 모든 속성을 얻을 수 있습니다.
-원래의 유저 `form` 템플릿을 보낼때 여러분은 에러를 테스트 할 수 있습니다.
-이러한 테스트중에서, 모든 에러속성을 화면에 표시합니다.
+여러분은 폼과 바운드된 `PersonForm`객체로부터 모든 속성을 얻을 수 있습니다. 그리고 원래의 유저 `form` 템플릿을 보낼때 여러분은 에러를 테스트 할 수 있습니다. 이러한 테스트중에서, 모든 에러속성을 화면에 표시합니다.
 
 모든 유저객체의 속성이 조건에 맞으면 최종 `results` 템플릿으로 이동합니다.
 
@@ -319,16 +311,12 @@ public class WebController implements WebMvcConfigurer {
 </html>
 ```
 
-이 페이지는 테이블에서 각 필드를 분리된 슬롯으로 나눈 간단한 폼입니다.
-이 폼은 `/`의 POST 메소드를 보도록 되어있습니다.
-그리고 이 폼은 `personForm` 객체로 백업되며 웹컨트롤러에서 GET 메소드로 볼 수 있습니다.
+이 페이지는 테이블에서 각 필드를 분리된 슬롯으로 나눈 간단한 폼입니다. 
+이 폼은 `/`의 POST 메소드를 보도록 되어있습니다. 그리고 이 폼은 `personForm` 객체로 백업되며 웹컨트롤러에서 GET 메소드로 볼 수 있습니다.
 이것이 **bean-backed form**으로 우리에게 알려진 것입니다.
-`PersonForm`빈은 두개의 필드가 있고, 여러분은 `th:field="{name}"` **그리고** `th:field="{age}"`으로 볼 수 있습니다.
-그리고 각 필드의 두번째 요소(td)는 유효성 에러를 볼 수 있습니다.
+`PersonForm`빈은 두개의 필드가 있고, 여러분은 `th:field="{name}"` **그리고** `th:field="{age}"`으로 볼 수 있습니다. 그리고 각 필드의 두번째 요소(td)는 유효성 에러를 볼 수 있습니다.
 
-마지막으로, 여러분은 제출(submit)을 할 수 있는 버튼을 가지고 있습니다.
-제출하고 나서 이름이나 나이에 있는 `@Valid` 조건을 위반한 값을 입력할 경우 이 페이지로 돌아가서 에러 메시지를 화면에 보여줄 것 입니다.
-만약 이름과 나이를 조건에 맞게 입력 할 경우 다음페이지로 이동할 것 입니다.
+마지막으로, 여러분은 제출(submit)을 할 수 있는 버튼을 가지고 있습니다. 제출하고 나서 이름이나 나이에 있는 `@Valid` 조건을 위반한 값을 입력할 경우 이 페이지로 돌아가서 에러 메시지를 화면에 보여줄 것 입니다. 만약 이름과 나이를 조건에 맞게 입력 할 경우 다음페이지로 이동할 것 입니다.
 
 `src/main/resources/templates/results.html`
 
@@ -344,8 +332,7 @@ public class WebController implements WebMvcConfigurer {
 
 
 ## 어플리케이션 클래스 만들기
-이 어플리케이션을 위해 여러분은 [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html) 템플릿 언어를 사용하고 있습니다.
-이 어플리케이션은 순수 HTML보다 더 많은것을 필요로 합니다.
+이 어플리케이션을 위해 여러분은 [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html) 템플릿 언어를 사용하고 있습니다. 그리고 이 어플리케이션은 순수 HTML보다 더 많은것을 필요로 합니다.
 
 `src/main/java/hello/Application.java`
 
@@ -365,11 +352,10 @@ public class Application {
 }
 ```
 
-Spring에서는 MVC 활성화를 위해 어플리케이션 클래스에 보통 `@EnableWebMvc`를 더합니다.
-그러나 Spring Boot에서는 클래스 패스 안에 **spring-webmvc**를 찾아서 이미 `@SpringBootApplication` 어노테이션이 더해져 있습니다. 
+Spring에서는 MVC 활성화를 위해 어플리케이션 클래스에 보통 `@EnableWebMvc`를 더합니다. 그러나 Spring Boot에서는 클래스 패스 안에 **spring-webmvc**를 찾아서 이미 `@SpringBootApplication` 어노테이션이 더해져 있습니다. 
 이 어노테이션은 `@Controller`가 표시된 클래스와 안에 포함된 메소드를 찾습니다.
-Thymeleaf 환경설정은 또한 `@SpringBootApplication`안에 포함되어 있습니다
-그리고 `templates/` 폴더 아래에 있는 템플릿들의 '.html'의 접미어를 제거하여 뷰로 보여줍니다.
+
+Thymeleaf 환경설정은 또한 `@SpringBootApplication`안에 포함되어 있습니다. 그리고 `templates/` 폴더 아래에 있는 템플릿들의 '.html'의 접미어를 제거하여 뷰로 보여줍니다.
 Thymeleaf 세팅은 여러분의 원하는 바에 따라 다양하게 변경 가능합니다만 이 가이드에서는 다루지 않습니다.
 
 ## 실행가능한 JAR로 빌드하기
@@ -377,42 +363,42 @@ Thymeleaf 세팅은 여러분의 원하는 바에 따라 다양하게 변경 가
 또는 모든 필요한 의존성, 클래스, 자원등을 포함한 하나의 실행가능한 JAR로 빌드할 수도 있습니다.
 그래서 다양한 환경에서 개발 주기 전반에 걸쳐 버전을 올리고 서비스를 배포하는 것이 쉬워집니다.
 
-Gradle을 사용할 경우 `./gradlew bootRun` 명령어로 실행할 수 있습니다.
-또는 `./gradlew build` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
+Gradle을 사용할 경우 `./gradlew bootRun` 명령어로 실행할 수 있습니다. 또는 `./gradlew build` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
 
 ```
 java -jar build/libs/gs-validating-form-input-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. 
-Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 있습니다.
-Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
-또는 `./mvnw clean package` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
+Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 있습니다. 또는 `./mvnw clean package` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
 
 ```
 java -jar target/gs-validating-form-input-0.1.0.jar
 ```
 
-> 이 행동은 실행가능한 JAR파일을 만드는 방법입니다.
-물론 [WAR파일 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
+> 이 행동은 실행가능한 JAR파일을 만드는 방법입니다. 물론 [WAR파일 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
 
 이 어플리케이션은 잠시 후 실행됩니다.
+
 웹브라우저에서 http://localhost:8080/을 입력하면 다음과 같이 볼 수 있습니다.
+
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-01.png)
 
 이름에 **A**를 입력하고 나이에 **15**를 입력하고 **Submit**을 클릭해 봅시다.
+
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-02.png)
 
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-03.png)
-`PersonForm`클래스의 유효한 입력조건에 맞지않아 메인페이지로 강제이동된 것을 볼 수 있습니다.
-입력란을 비우고 Submit 버튼을 누르면 또 다른 오류가 발생합니다.
+
+`PersonForm`클래스의 유효한 입력조건에 맞지않아 메인페이지로 강제이동된 것을 볼 수 있습니다. 입력란을 비우고 Submit 버튼을 누르면 또 다른 오류가 발생합니다.
+
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-04.png)
+
 유효한 이름과 나이를 입력하고 Submit 버튼을 누르면 `results` 페이지를 만날 수 있습니다.
+
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-05.png)
 
 ## 결론
-축하합니다! 유효성을 체크가 내장되어 있는 domain object를 활용하여 간단한 웹 어플리케이션을 만들었습니다.
-이 방법대로 하면 데이터가 특정 기준을 충족시키고 사용자가 올바르게 입력했는지 확인할 수 있습니다.
+축하합니다! 유효성을 체크가 내장되어 있는 domain object를 활용하여 간단한 웹 어플리케이션을 만들었습니다. 이 방법대로 하면 데이터가 특정 기준을 충족시키고 사용자가 올바르게 입력했는지 확인할 수 있습니다.
 
 ## 참고
 이 가이드들을 따라하면 도움이 될 것입니다:
