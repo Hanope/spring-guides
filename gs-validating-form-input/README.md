@@ -319,19 +319,29 @@ This controller has a GET and a POST method, both mapped to `/`.
 The `showForm` method returns the `form` template. 
 `showForm`메소드는 `form` 템플릿을 반환합니다.
 It includes a `PersonForm` in its method signature so the template can associate form attributes with a `PersonForm`.
-이 템플릿은 `PersonForm`
+이 템플릿은 `PersonForm`을 연상시켜 템플릿을 반환하게 하는 메소드를 가지고 있습니다.
 
 The `checkPersonFormInfo` method accepts two arguments:
+`checkPersonFormInfo` 메소드는 두개의 인수를 받습니다.
 
 * A `personForm` object marked up with `@Valid` to gather the attributes filled out in the form you’re about to build.
+여러분이 만들 폼 양식에 맞는 속성을 가지고 `@Valid`가 표시된 `personForm` 오브젝트
 * A `bindingResult` object so you can test for and retrieve validation errors.
+유효성 에러를 테스트 할 수 있는 `bindingResult`객체
 
-You can retrieve all the attributes from the form bound to the `PersonForm` object. In the code, you test for errors, and if so, send the user back to the original `form` template. In that situation, all the error attributes are displayed.
+You can retrieve all the attributes from the form bound to the `PersonForm` object. 
+여러분은 폼과 바운드된 `PersonForm`객체로부터 모든 속성을 얻을 수 있습니다.
+In the code, you test for errors, and if so, send the user back to the original `form` template. 
+원래의 유저 `form` 템플릿을 보낼때 여러분은 에러를 테스트 할 수 있습니다.
+In that situation, all the error attributes are displayed.
+이러한 테스트중에서, 모든 에러속성을 화면에 표시합니다.
 
 If all of the person’s attribute are valid, then it redirects the browser to the final `results` template.
+모든 유저객체의 속성이 조건에 맞으면 최종 `results` 템플릿으로 이동합니다.
 
-## Build an HTML front end
+## HTML 화면 만들기
 Now you build the "main" page.
+이제 메인페이지를 만들어봅시다.
 
 `src/main/resources/templates/form.html`
 
@@ -359,9 +369,25 @@ Now you build the "main" page.
 </html>
 ```
 
-The page contains a simple form with each field in a separate slot of a table. The form is geared to post towards `/`. It is marked as being backed up by the `personForm` object that you saw in the GET method in the web controller. This is known as a **bean-backed form**. There are two fields in the `PersonForm` bean, and you can see them tagged `th:field="{name}`" **and** `th:field="{age}"`. Next to each field is a secondary element used to show any validation errors.
+The page contains a simple form with each field in a separate slot of a table. 
+이 페이지는 테이블에서 각 필드를 분리된 슬롯으로 나눈 간단한 폼입니다.
+The form is geared to post towards `/`. 
+이 폼은 `/`의 POST 메소드를 보도록 되어있습니다.
+It is marked as being backed up by the `personForm` object that you saw in the GET method in the web controller.
+그리고 이 폼은 `personForm` 객체로 백업되며 웹컨트롤러에서 GET 메소드로 볼 수 있습니다.
+This is known as a **bean-backed form**.
+이것이 **bean-backed form**으로 우리에게 알려진 것입니다.
+There are two fields in the `PersonForm` bean, and you can see them tagged `th:field="{name}`" **and** `th:field="{age}"`. 
+`PersonForm`빈은 두개의 필드가 있고, 여러분은 `th:field="{name}"` **그리고** `th:field="{age}"`으로 볼 수 있습니다.
+Next to each field is a secondary element used to show any validation errors.
+그리고 각 필드의 두번째 요소(td)는 유효성 에러를 볼 수 있습니다.
 
-Finally, you have a button to submit. In general, if the user enters a name or age that violates the `@Valid` constraints, it will bounce back to this page with the error message on display. If a valid name and age is entered, the user is routed to the next web page.
+Finally, you have a button to submit. 
+마지막으로, 여러분은 제출(submit)을 할 수 있는 버튼을 가지고 있습니다.
+In general, if the user enters a name or age that violates the `@Valid` constraints, it will bounce back to this page with the error message on display. 
+제출하고 나서 이름이나 나이에 있는 `@Valid` 조건을 위반한 값을 입력할 경우 이 페이지로 돌아가서 에러 메시지를 화면에 보여줄 것 입니다.
+If a valid name and age is entered, the user is routed to the next web page.
+만약 이름과 나이를 조건에 맞게 입력 할 경우 다음페이지로 이동할 것 입니다.
 
 `src/main/resources/templates/results.html`
 
@@ -374,9 +400,14 @@ Finally, you have a button to submit. In general, if the user enters a name or a
 ```
 
 > In this simple example, these web pages don’t have any sophisticated CSS or JavaScript. But for any production web site, it’s valuable to learn how to style your web pages.
+이 예제에서 어느 페이지도 복잡한 CSS나 JavaScript를 가지고 있지는 않습니다. 그러나 여러분이 웹페이지 꾸미는 것을 배우는 것은 매우 가치있는 일입니다.
 
-## Create an Application class
+
+## 어플리케이션 클래스 만들기
 For this application, you are using the template language of [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html). This application needs more than raw HTML.
+이 어플리케이션을 위해 여러분은 [Thymeleaf](http://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html) 템플릿 언어를 사용하고 있습니다.
+This application needs more than raw HTML
+이 어플리케이션은 순수 HTML보다 더 많은것을 필요로 합니다.
 
 `src/main/java/hello/Application.java`
 
@@ -396,51 +427,80 @@ public class Application {
 }
 ```
 
-To activate Spring MVC, you would normally add `@EnableWebMvc` to the Application class. But Spring Boot’s `@SpringBootApplication` already adds this annotation when it detects **spring-webmvc** on your classpath. This same annotation allows it to find the annotated `@Controller` class and its methods.
+To activate Spring MVC, you would normally add `@EnableWebMvc` to the Application class. 
+Spring에서는 MVC 활성화를 위해 어플리케이션 클래스에 보통 `@EnableWebMvc`를 더합니다.
+But Spring Boot’s `@SpringBootApplication` already adds this annotation when it detects **spring-webmvc** on your classpath. 
+그러나 Spring Boot에서는 클래스 패스 안에 **spring-webmvc**를 찾아서 이미 `@SpringBootApplication` 어노테이션이 더해져 있습니다. 
+This same annotation allows it to find the annotated `@Controller` class and its methods.
+이 어노테이션은 `@Controller`가 표시된 클래스와 안에 포함된 메소드를 찾습니다.
+The Thymeleaf configuration is also taken care of by `@SpringBootApplication`: 
+Thymeleaf 환경설정은 또한 `@SpringBootApplication`안에 포함되어 있습니다
+by default templates are located in the classpath under `templates/` and are resolved as views by stripping the '.html' suffix off the file name.
+그리고 `templates/` 폴더 아래에 있는 템플릿들의 '.html'의 접미어를 제거하여 뷰로 보여줍니다.
 
-The Thymeleaf configuration is also taken care of by `@SpringBootApplication`: by default templates are located in the classpath under `templates/` and are resolved as views by stripping the '.html' suffix off the file name. Thymeleaf settings can be changed and overridden in a variety of ways depending on what you need to achieve, but the details are not relevant to this guide.
+Thymeleaf settings can be changed and overridden in a variety of ways depending on what you need to achieve, but the details are not relevant to this guide.
+Thymeleaf 세팅은 여러분의 원하는 바에 따라 다양하게 변경 가능합니다만 이 가이드에서는 다루지 않습니다.
 
-## Build an executable JAR
-You can run the application from the command line with Gradle or Maven. Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+## 실행가능한 JAR로 빌드하기
+You can run the application from the command line with Gradle or Maven. 
+여러분은 Gradle이나 Maven을 이용한 커맨드 라인으로 이 어플리케이션을 실행할 수 있습니다.
+Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. 
+또는 모든 필요한 의존성, 클래스, 자원등을 포함한 하나의 실행가능한 JAR로 빌드할 수도 있습니다.
+This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+그래서 다양한 환경에서 개발 주기 전반에 걸쳐 버전을 올리고 서비스를 배포하는 것이 쉬워집니다.
 
-If you are using Gradle, you can run the application using `./gradlew bootRun`. Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+If you are using Gradle, you can run the application using `./gradlew bootRun`. 
+Gradle을 사용할 경우 `./gradlew bootRun` 명령어로 실행할 수 있습니다.
+Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+또는 `./gradlew build` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
 
 ```
 java -jar build/libs/gs-validating-form-input-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+If you are using Maven, you can run the application using `./mvnw spring-boot:run`. 
+Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 있습니다.
+Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+또는 `./mvnw clean package` 명령어로 JAR파일을 만들고 다음과 같이 JAR파일을 실행할 수 있습니다.
 
 ```
 java -jar target/gs-validating-form-input-0.1.0.jar
 ```
 
-> The procedure above will create a runnable JAR. You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+> The procedure above will create a runnable JAR. 
+이 행동은 실행가능한 JAR파일을 만드는 방법입니다.
+You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+물론 [WAR파일 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
 
 The application should be up and running within a few seconds.
-
+이 어플리케이션은 잠시 후 실행됩니다.
 If you visit http://localhost:8080/, you should see something like this:
-
+웹브라우저에서 http://localhost:8080/을 입력하면 다음과 같이 볼 수 있습니다.
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-01.png)
 
 What happens if you enter **A** for the name and **15** for your age and click on **Submit**?
-
+이름에 **A**를 입력하고 나이에 **15**를 입력하고 **Submit**을 클릭해 봅시다.
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-02.png)
 
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-03.png)
-Here you can see that because it violated the constraints in the `PersonForm` class, you get bounced back to the "main" page. If you click on Submit with nothing in the entry box, you get a different error.
-
+Here you can see that because it violated the constraints in the `PersonForm` class, you get bounced back to the "main" page. 
+`PersonForm`클래스의 유효한 입력조건에 맞지않아 메인페이지로 강제이동된 것을 볼 수 있습니다.
+If you click on Submit with nothing in the entry box, you get a different error.
+입력란을 비우고 Submit 버튼을 누르면 또 다른 오류가 발생합니다.
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-04.png)
 If you enter a valid name and age, you end up on the `results` page!
-
+유효한 이름과 나이를 입력하고 Submit 버튼을 누르면 `results` 페이지를 만날 수 있습니다.
 ![](http://spring.io/guides/gs/validating-form-input/images/valid-05.png)
 
-## Summary
-Congratulations! You have coded a simple web application with validation built into a domain object. This way you can ensure the data meets certain criteria and that the user inputs it correctly.
+## 결론
+Congratulations! You have coded a simple web application with validation built into a domain object. 
+축하합니다! 유효성을 체크가 내장되어 있는 domain object를 활용하여 간단한 웹 어플리케이션을 만들었습니다.
+This way you can ensure the data meets certain criteria and that the user inputs it correctly.
+이 방법대로 하면 데이터가 특정 기준을 충족시키고 사용자가 올바르게 입력했는지 확인할 수 있습니다.
 
-## See Also
+## 참고
 The following guides may also be helpful:
-
+이 가이드들을 따라하면 도움이 될 것입니다:
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 * [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
 * [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
