@@ -40,7 +40,7 @@ STS는 [Consuming Rest](http://spring.io/guides/gs/consuming-rest)의 initial과
 
 ![](http://spring.io/guides/gs/sts/images/4_after-import.png)
 
-여러분은 이 브라우저에서 가이드를 보거나 코드 파일을 찾아갈 수 있습니다.
+여러분은 이 화면에서 브라우저에 표시된 가이드를 보며 코드 파일을 찾아갈 수 있습니다.
 
 ## 마무리
 축하합니다! 여러분은 STS를 설치하고 스프링 시작 가이드 중 Consuming Rest 프로젝트를 만들었으며 해당 가이드의 브라우저를 열었습니다.
