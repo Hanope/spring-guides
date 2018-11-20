@@ -35,9 +35,11 @@ STS가 켜지면 상단의 **File** 메뉴를 클릭하시고 **Import Spring Ge
 이 가이드에서는 검색창에 **rest**를 입력할 것이며 [Consuming Rest](http://spring.io/guides/gs/consuming-rest)를 선택할 것입니다. 그리고 빌드 툴로 **Maven**을 선택할 것이며 **initial**과 **complete** 코드 셋을 선택할 것입니다. 또한 웹페이지를 열도록 하는 옵션을 선택했습니다:
 
 ![](http://spring.io/guides/gs/sts/images/3_wizard.png)
+
 STS는 [Consuming Rest](http://spring.io/guides/gs/consuming-rest)의 initial과 complete의 코드가 들어있는 두 개의 새로운 프로젝트를 여러분이 선택한 폴더 안에 만듭니다. 그리고 STS의 내장 브라우저가 열립니다:
 
 ![](http://spring.io/guides/gs/sts/images/4_after-import.png)
+
 여러분은 이 브라우저에서 가이드를 보거나 코드 파일을 찾아갈 수 있습니다.
 
 ## 마무리
