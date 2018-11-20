@@ -18,7 +18,7 @@
 대부분의 [스프링 시작 가이드](http://spring.io/guides)처럼 처음부터 하나씩 완성해 가거나
 익숙한 시작 부분은 건너뛰어도 됩니다. 어느 방법을 선택하시더라도 작동되는 코드만 완성시키면 됩니다.
 
-**처음부터 작업하실분**은 [Gradle을 사용한 빌드](https://github.com/Hanope/spring-guides/tree/master/gs-validating-form-input#Gradle을-사용한-빌드)로 가세요.
+**처음부터 작업하실분**은 [Gradle을 사용한 빌드](#Gradle을 사용한 빌드)로 가세요.
 
 **시작부분을 건너뛰실분**은 아래방법을 따라하세요.
 
