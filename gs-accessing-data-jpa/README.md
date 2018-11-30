@@ -1,36 +1,36 @@
-## Accessing Data with JPA
-This guide walks you through the process of building an application that uses Spring Data JPA to store and retrieve data in a relational database.
+## JPA로 데이터 접근하기
+이 가이드는 스프링 데이터 JPA를 통해 관계형 데이터베이스(RDB)에서 데이터를 주고 받는 어플리케이션을 만드는 과정으로 안내합니다.
 
-## What you’ll build
-You’ll build an application that stores `Customer` [POJOs](http://spring.io/understanding/POJO) in a memory-based database.
+## 무엇을 만들게 되는가?
+여러분은 메모리 기반 데이터베이스에서 `Customer` [POJOs](http://spring.io/understanding/POJO)를 활용하여 저장하는 어플리케이션을 만들 것입니다.
 
-## What you’ll need
-* About 15 minutes
-* A favorite text editor or IDE
-* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later
-* [Gradle 4+](http://www.gradle.org/downloads) or [Maven 3.2+](https://maven.apache.org/download.cgi)
-* You can also import the code straight into your IDE:
+## 무엇이 필요한가?
+* 약 15분의 시간
+* 좋아하는 텍스트 에디터나 IDE
+* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 또는 그 이상
+* [Gradle 4+](http://www.gradle.org/downloads) 또는 [Maven 3.2+](https://maven.apache.org/download.cgi)
+* 또한 아래의 IDE를 이용해 코드를 바로 불러올 수 있습니다:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
 
-## How to complete this guide
-Like most Spring [Getting Started guides](http://spring.io/guides), you can start from scratch and complete each step, or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+## 이 가이드를 완료하는 방법
+대부분의 [스프링 시작 가이드](http://spring.io/guides)처럼 처음부터 하나씩 완성해 가거나 익숙한 시작 부분은 건너뛰어도 됩니다. 어느 방법을 선택하시더라도 작업을 진행할 수 있는 코드가 완성됩니다.
 
-To **start from scratch**, move on to [Build with Gradle](#build-with-gradle).
+**처음부터 작업하실 분**은 [Gradle을 사용한 빌드](#Gradle을-사용한-빌드)로 가세요.
 
-To **skip the basics**, do the following:
+**시작부분을 건너뛰실 분**은 아래방법을 따라하세요.
 
-* [Download](https://github.com/spring-guides/gs-accessing-data-jpa/archive/master.zip) and unzip the source repository for this guide, or clone it using [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-accessing-data-jpa.git`
-* cd into `gs-accessing-data-jpa/initial`
-* Jump ahead to [Define a simple entity](#define-a-simple-entity).
+* [다운로드](https://github.com/spring-guides/gs-accessing-data-jpa/archive/master.zip) 하시고 압축파일을 풀어주시거나 [GIT](http://spring.io/understanding/Git)을 사용해 복제해주세요: `git clone https://github.com/spring-guides/gs-accessing-data-jpa.git`
+* 소스의 압축을 해제한 폴더에서 `gs-validating-form-input/initial`로 이동합니다.
+* [간단한 엔티티 정의하기](#간단한-엔티티-정의하기)로 이동합니다.
 
-**When you’re finished**, you can check your results against the code in `gs-accessing-data-jpa/complete`.
+**끝나고 나면**, `gs-accessing-data-jpa/complete`의 코드와 비교해서 맞는지 확인해보세요.
 
-## Build with Gradle
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Gradle](http://gradle.org/) and [Maven](https://maven.apache.org/) is included here. If you’re not familiar with either, refer to [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) or [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Gradle을 사용한 빌드
+첫 번째로 여러분은 빌드 스크립트를 만들어야 합니다. 여러분은 스프링 어플리케이션을 빌드 할 때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Gradle](http://gradle.org/)이나 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다. Gradle이나 Maven에 익숙하지 않은 경우, [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) 또는 [Building Java Projects with Maven](http://spring.io/guides/gs/maven)을 참조하세요.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 폴더 구조 만들기
+프로젝트 폴더를 선택하시고 안에 다음과 같이 하위 폴더를 만들어주세요 예를 들면, *nix(linux, unix)에서는 `mkdir -p src/main/java/hello`를 입력하면 됩니다:
 
 ```
 └── src
@@ -39,8 +39,8 @@ In a project directory of your choosing, create the following subdirectory struc
             └── hello
 ```
 
-### Create a Gradle build file
-Below is the [initial Gradle build file](https://github.com/spring-guides/gs-accessing-data-jpa/blob/master/initial/build.gradle).
+### Gradle 빌드 파일 만들기
+[초기 Gradle build file](https://github.com/spring-guides/gs-validating-form-input/blob/master/initial/build.gradle)은 아래와 같습니다.
 
 `build.gradle`
 
@@ -80,17 +80,17 @@ dependencies {
 }
 ```
 
-The [Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html) provides many convenient features:
+[Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html)은 많고 편리한 기능을 제공합니다:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 이 플러그인은 클래스패스 위의 jar를 하나의 실행 가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
+* 이 플러그인은 `public static void main()`메소드를 찾아 실행 가능한 클래스로 표시를 해줍니다.
+* 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다. 여러분이 원하는 버전을 사용할 수도 있습니다만 기본적으로 Spring Boot에서 선택한 버전이 기본 제공됩니다.
 
-## Build with Maven
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org/) is included here. If you’re not familiar with Maven, refer to [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Maven을 사용한 빌드
+첫번째로 여러분은 빌드 스크립트를 만들어야 합니다. 여러분은 스프링 어플리케이션을 빌드할때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다. Maven에 익숙하지 않은 경우, [Building Java Projects with Maven](http://spring.io/guides/gs/maven)을 참조하세요.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 폴더 구조 만들기
+프로젝트 폴더를 선택하시고 안에 다음과 같이 하위 폴더를 만들어주세요. 예를 들면, *nix(linux, unix)에서는 `mkdir -p src/main/java/hello`를 입력하면 됩니다:
 
 ```
 └── src
@@ -171,18 +171,18 @@ In a project directory of your choosing, create the following subdirectory struc
 </project>
 ```
 
-The [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin) provides many convenient features:
+이 [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin)은 많고 편리한 기능을 제공합니다.:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 이 플러그인은 클래스패스 위의 jar를 하나의 실행가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
+* 이 플러그인은 `public static void main()`메소드를 찾아 실행 가능한 클래스로 표시를 해줍니다.
+* 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다.
 
-## Build with your IDE
-* Read how to import this guide straight into [Spring Tool Suite](http://spring.io/guides/gs/sts/).
-* Read how to work with this guide in [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea).
+## 여러분의 IDE를 사용한 빌드 하기
+* 이 가이드를 STS에 직접 삽입하는 방법을 알고싶으면 [Spring Tool Suite](http://spring.io/guides/gs/sts/)을 읽어주세요.
+* 이 가이드를 Intellij IDEA에서 작동시키는 법을 알고 싶으면 [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)을 읽어주세요.
 
-## Define a simple entity
-In this example, you store Customer objects, annotated as a JPA entity.
+## 간단한 엔티티 정의하기
+이 예제에서는 JPA의 entity 어노테이션이 지정된 Customer 오브젝트를 만들어서 저장합니다.
 
 `src/main/java/hello/Customer.java`
 
@@ -220,22 +220,22 @@ public class Customer {
 }
 ```
 
-Here you have a `Customer` class with three attributes, the `id`, the `firstName`, and the lastName. You also have two constructors. The default constructor only exists for the sake of JPA. You won’t use it directly, so it is designated as `protected`. The other constructor is the one you’ll use to create instances of `Customer` to be saved to the database.
+여기의 `Customer` 클래스는 `id`, `firstName`, lastName의 세 개의 속성을 가지고 있습니다. 또한 이 클래스는 두 개의 생성자를 가지고 있습니다. 클래스의 기본 생성자는 JPA를 위해서만 존재합니다 그리고 여러분이 생성자를 직접 사용하지 않을것이므로 `protected`로 만들었습니다. 다른 생성자는 여러분이 `Customer` 인스턴스를 생성해서 데이터베이스에 저장하는데 사용될 것입니다.
 
-> In this guide, the typical getters and setters have been left out for brevity.
+> 이 가이드에서 간결함을 위해 Getter와 Setter는 넣지 않았습니다.
 
-The `Customer` class is annotated with `@Entity`, indicating that it is a JPA entity. For lack of a `@Table` annotation, it is assumed that this entity will be mapped to a table named `Customer`.
+`@Entity` 어노테이션으로 표시된 `Customer` 클래스는 JPA 엔티티 임을 나타냅니다. `@Table` 어노테이션으로 따로 표시되지 않으므로, `Customer`의 이름을 가진 테이블에 자동으로 매핑됩니다.
 
-The `Customer`’s `id` property is annotated with `@Id` so that JPA will recognize it as the object’s ID. The `id` property is also annotated with `@GeneratedValue` to indicate that the ID should be generated automatically.
+`Customer`의 `id` 속성은 `@Id` 어노테이션이 붙어 있어 JPA가 객체의 ID로 이 속성을 사용할 것임을 알 수 있습니다. 그리고 `id` 속성에 붙어 있는 `@GeneratedValue` 어노테이션은 ID가 자동적으로 생성되는 것임을 나타냅니다.
 
-The other two properties, `firstName` and `lastName` are left unannotated. It is assumed that they’ll be mapped to columns that share the same name as the properties themselves.
+나머지 두개의 `firstName`과 `lastName`는 어노테이션이 없습니다. 이것은 그 속성들이 각각 같은 이름을 가진 컬럼과 매핑되는 것을 의미합니다.
 
-The convenient `toString()` method will print out the customer’s properties.
+편리한 `toString()` 메소드는 customer 속성들을 출력할 것입니다.
 
-## Create simple queries
-Spring Data JPA focuses on using JPA to store data in a relational database. Its most compelling feature is the ability to create repository implementations automatically, at runtime, from a repository interface.
+## 간단한 쿼리들 만들기
+Spring Data JPA는 JPA를 사용하여 관계형 데이터베이스에 저장하는데 초점이 맞춰져 있습니다. 그리고 이것의 가장 강력한 기능은 시작할 때 저장소(리포지토리) 인터페이스가 자동으로 구현이 되는 것입니다.
 
-To see how this works, create a repository interface that works with `Customer` entities:
+`Customer` 엔티티에서 리포지토리 인터페이스을 생성하면서 어떻게 JPA가 작동하는지 보겠습니다.
 
 `src/main/java/hello/CustomerRepository.java`
 
@@ -252,16 +252,16 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 }
 ```
 
-`CustomerRepository` extends the `CrudRepository` interface. The type of entity and ID that it works with,`Customer` and `Long`, are specified in the generic parameters on `CrudRepository`. By extending `CrudRepository`, `CustomerRepository` inherits several methods for working with `Customer` persistence, including methods for saving, deleting, and finding `Customer` entities.
+`CustomerRepository`는 `CrudRepository` 인터페이스를 상속받습니다. `CrudRepository`의 일반적인 파리미터는 엔티티와 ID의 타입을 받으며 엔티티에는 `Customer`를 ID의 타입인 `Long`을 넣어서 작업하였습니다. `CrudRepository`를 상속받은 `CustomerRepository`는 `Customer` 엔티티를 가지고 저장, 삭제, 찾기 등의 다양한 메소드를 가지고 있습니다.
 
-Spring Data JPA also allows you to define other query methods by simply declaring their method signature. In the case of `CustomerRepository`, this is shown with a `findByLastName()` method.
+또한 Spring Data JPA는 여러분이 JPA의 간단한 메소드 시그니처(메소드를 생성하기 위한 규칙 중 메소드명과 파라미터)를 활용하여 간단하게 다른 쿼리 메소드를 정의할수도 있습니다. `CustomerRepository`에서는 `findByLastName()` 메소드에서 시그니처를 활용해 정의한 것을 볼 수 있습니다.
 
-In a typical Java application, you’d expect to write a class that implements `CustomerRepository`. But that’s what makes Spring Data JPA so powerful: You don’t have to write an implementation of the repository interface. Spring Data JPA creates an implementation on the fly when you run the application.
+전통적인 자바 어플리케이션에서는 `CustomerRepository`를 구현하는 클래스를 생성해야 합니다. 그러나 여러분은 리포지토리 인터페이스를 구현하는 클래스를 작성할 필요가 없습니다. 이것이 Spring Data JPA가 강력하다고 불리는 이유입니다. Spring Data JPA는 여러분이 어플리케이션을 실행할 때 즉석에서 인터페이스 구현을 생성합니다.
 
-Let’s wire this up and see what it looks like!
+생성한 것을 연결하고 어떻게 작동되는지 확인해 봅시다.
 
-## Create an Application class
-Here you create an Application class with all the components.
+## 어플리케이션 클래스 만들기
+모든 구성요소가 있는 어플리케이션 클래스를 만들어 보겠습니다.
 
 `src/main/java/hello/Application.java`
 
@@ -328,37 +328,37 @@ public class Application {
 }
 ```
 
-`@SpringBootApplication` is a convenience annotation that adds all of the following:
+`@SpringBootApplication`은 아래의 모든것을 더해주는 편리한 어노테이션입니다.
 
-* `@Configuration` tags the class as a source of bean definitions for the application context.
-* `@EnableAutoConfiguration` tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
-* Normally you would add `@EnableWebMvc` for a Spring MVC app, but Spring Boot adds it automatically when it sees **spring-webmvc** on the classpath. This flags the application as a web application and activates key behaviors such as setting up a `DispatcherServlet`.
-* `@ComponentScan` tells Spring to look for other components, configurations, and services in the `hello` package, allowing it to find the controllers.
+* `@Configuration` 태그는 어플리케이션 컨텍스트에서 이 클래스를 빈으로 정의합니다.
+* `@EnableAutoConfiguration`는 스프링 부트에서 클래스패스 세팅과 다른 빈과 다양한 설정을 해줍니다.
+* 보통 Spring MVC app에서는 `@EnableWebMvc`를 붙이지만, 스프링 부트에서는 클래스 패스 위에 자동으로 **spring-webmvc**가 붙습니다. 이 플래그는 이 어플리케이션이 웹 어플리케이션이라는 것을 표시하고 `DispatcherServlet` 설정 등 핵심 행동을 하도록 합니다.
+* `@ComponentScan`는 `hello` 패키지 내의 컨트롤러, 서비스, 컴포넌트(구성요소), 설정등을 찾도록 합니다.
 
-The `main()` method uses Spring Boot’s `SpringApplication.run()` method to launch an application. Did you notice that there wasn’t a single line of XML? No **web.xml** file either. This web application is 100% pure Java and you didn’t have to deal with configuring any plumbing or infrastructure.
+어플리케이션 실행을 위한 `main()` 메소드에서는 스프링 부트에서 실행에 사용하는 `SpringApplication.run()` 메소드를 사용합니다. 여러분은 **web.xml**을 포함해서 한줄의 XML도 없다는 것을 알고 있으신가요? 이 웹 어플리케이션은 100% 순수한 자바로 되어있으며 여러분은 내부구조 설정을 위해 전혀 신경 쓸 필요가 없습니다.
 
-`Application` includes a `main()` method that puts the `CustomerRepository` through a few tests. First, it fetches the `CustomerRepository` from the Spring application context. Then it saves a handful of `Customer` objects, demonstrating the `save()` method and setting up some data to work with. Next, it calls `findAll()` to fetch all `Customer` objects from the database. Then it calls `findOne()` to fetch a single `Customer` by its ID. Finally, it calls `findByLastName()` to find all customers whose last name is "Bauer".
+`Application`은 `CustomerRepository`를 통한 몇가지 테스트가 들어있는 `main()` 메소드를 포함하고 있습니다. 첫째로, 스프링의 어플리케이션 컨텍스트에서 `CustomerRepository`를 가져옵니다. 그리고 `save()` 메소드를 시연을 위해 데이터를 세팅해서 소수의 `Customer` 오브젝트를 저장합니다. 다음에, `findAll()` 메소드를 불러 모든 `Customer` 오브젝트를 데이터베이스로 부터 가져옵니다. 그리고 `findOne()` 메소드를 사용하여 ID로 하나의 `Customer` 오브젝트를 가져옵니다. 마지막으로 모든 고객 오브젝트 중 `findByLastName()` 메소드를 활용하여 이름이 "Bauer"인 고객을 가져옵니다.
 
-> By default, Spring Boot will enable JPA repository support and look in the package (and its subpackages) where `@SpringBootApplication` is located. If your configuration has JPA repository interface definitions located in a package not visible, you can point out alternate packages using `@EnableJpaRepositories` and its type-safe `basePackageClasses=MyRepository.class` parameter.
+> 기본적으로, 스프링 부트는 `@SpringBootApplication`이 위치한 패키지와 하위 서브패키지에서만 JPA 리포지토리를 지원합니다. 패키지내부에서 접근불가능한 곳에 정의된 JPA 리포지토리를 사용하려면, `@EnableJpaRepositories`과 파라미터 `basePackageClasses=MyRepository.class`를 사용해 안전하게 쓸 수 있습니다.
 
-## Build an executable JAR
-You can run the application from the command line with Gradle or Maven. Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+## 실행가능한 JAR로 빌드하기
+여러분은 Gradle이나 Maven을 이용한 커맨드 라인으로 이 어플리케이션을 실행할 수 있습니다. 또는 모든 필요한 의존성, 클래스, 자원 등을 포함한 하나의 실행 가능한 JAR로 빌드 할 수도 있습니다. 그래서 다양한 환경에서 개발 주기 전반에 걸쳐 버전을 올리고 서비스를 배포하는 것이 쉬워집니다.
 
-If you are using Gradle, you can run the application using `./gradlew bootRun`. Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+Gradle을 사용할 경우 `./gradlew bootRun` 명령어로 실행할 수 있습니다. 또는 `./gradlew build` 명령어로 JAR 파일을 만들고 다음과 같이 JAR 파일을 실행할 수 있습니다.
 
 ```
 java -jar build/libs/gs-accessing-data-jpa-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 있습니다. 또는 `./mvnw clean package` 명령어로 JAR 파일을 만들고 다음과 같이 JAR 파일을 실행할 수 있습니다.
 
 ```
 java -jar target/gs-accessing-data-jpa-0.1.0.jar
 ```
 
-> The procedure above will create a runnable JAR. You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+> 이 행동은 실행 가능한 JAR 파일을 만드는 방법입니다. 물론 [WAR파일로 만드는 방법](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
 
-You should see something like this:
+실행하면 여러분은 이것을 볼 수 있을겁니다:
 
 ```
 == Customers found with findAll():
@@ -376,13 +376,13 @@ Customer[id=1, firstName='Jack', lastName='Bauer']
 Customer[id=3, firstName='Kim', lastName='Bauer']
 ```
 
-## Summary
-Congratulations! You’ve written a simple application that uses Spring Data JPA to save objects to a database and to fetch them — all without writing a concrete repository implementation.
+## 요약
+축하합니다! 여러분은 Spring Data JPA를 사용하여 리포지토리를 구체적으로 구현하지 않은 상태로 데이터베이스에 저장하고 가져오는 간단한 어플리케이션을 만들었습니다.
 
-> If you’re interested in exposing JPA repositories with a hypermedia-based RESTful front end with little effort, you might want to read [Accessing JPA Data with REST](http://spring.io/guides/gs/accessing-data-rest).
+> 여러분이 조금의 노력을 추가해서 JPA 리포지토리를 활용하는 하이퍼미디어 기반의 RESTful한 프론트 엔드에 관심이 있다면, [Accessing JPA Data with REST](http://spring.io/guides/gs/accessing-data-rest)을 읽어보시는 것이 좋습니다.
 
-## See Also
-The following guides may also be helpful:
+## 추가로 볼만한 것
+다음 가이드 또한 도움이 될 수 있습니다:
 
 * [Accessing Data with Gemfire](https://spring.io/guides/gs/accessing-data-gemfire/)
 * [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
