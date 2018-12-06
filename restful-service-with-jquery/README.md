@@ -89,7 +89,7 @@ jQuery가 `.then()`이라는 프로미스를 사용하는 것을 주목하세요
 이 `class`속성은 jQuery가 HTML 요소를 참조하는 것과 REST 서비스에서 받아온 JSON의 `id`와 `content`값을 사용해 업데이트하는 것을 도와줍니다.
 
 ## 클라이언트 실행시키기
-클라이언트를 실행하려면, 여러분은 웹 서버에서 브라우저로 클라이언트를 제공해야 합니다. 스프링 부트 CLI(Command Line Interface)는 여러분이 웹 콘텐츠를 간단히 제공할 수 있도록 내장된 톰캣 서버를 포함하고 있습니다. CLI에 대해 많은 정보를 얻으시려면 [Building an Application with Spring Boot](http://spring.io/guides/gs/spring-boot/)를 보세요.
+클라이언트를 실행하려면, 여러분은 웹 서버에서 브라우저로 콘텐츠를 제공해야 합니다. 스프링 부트 CLI(Command Line Interface)는 여러분이 웹 콘텐츠를 간단히 제공할 수 있도록 내장된 톰캣 서버를 포함하고 있습니다. CLI에 대해 많은 정보를 얻으시려면 [Building an Application with Spring Boot](http://spring.io/guides/gs/spring-boot/)를 보세요.
 
 여러분은 내장된 톰캣 서버로 스프링 부트의 정적인 콘텐츠를 제공하기 위해 스프링 부트가 톰캣 서버에서 어플리케이션 코드를 실행하기 위한 최소한의 코드를 제공해야 합니다. 하단의 `app.groovy` 스크립트는 스프링 부트에게 여러분이 톰캣을 실행시키고 싶다고 알려주기 위한 충분한 단어입니다.
 
