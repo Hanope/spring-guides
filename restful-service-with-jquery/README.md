@@ -99,7 +99,7 @@ jQuery가 `.then()`이라는 프로미스를 사용하는 것을 주목하세요
 @Controller class JsApp { }
 ```
 
-이제 여러분은 스프링 부트 CLI를 실행시킬 수 있습니다.
+이제 여러분은 스프링 부트 CLI로 앱을 실행시킬 수 있습니다.
 
 ```
 spring run app.groovy
