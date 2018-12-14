@@ -108,7 +108,7 @@ AngularJS 라이브러리는 표준 HTML 태그에서 몇 개의 커스텀 속�
 spring run app.groovy
 ```
 
-앱이 시작하면 브라우저를 열어서 http://localhost:8080를 입력하세요. 그러면 아래와 같은 화면을 불 수 있습니다:
+앱이 시작하면 브라우저를 열어서 http://localhost:8080 를 입력하세요. 그러면 아래와 같은 화면을 불 수 있습니다:
 
 ![](http://spring.io/guides/gs/consuming-rest-angularjs/images/hello.png)
 
