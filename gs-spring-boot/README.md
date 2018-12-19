@@ -1,29 +1,14 @@
 ## 스프링 부트로 어플리케이션 만들기
-This guide provides a sampling of how [Spring Boot](https://github.com/spring-projects/spring-boot) helps you accelerate and facilitate application development. 
-이 가이드는 여러분이 어떻게 스프링 부트 개발을 빠르고 용이하게 할 수 있는가를 샘플을 만들며 알려줍니다.
-As you read more Spring Getting Started guides, you will see more use cases for Spring Boot. 
-여러분이 스프링 시작 가이드를 읽으면 다양한 스프링부트를 사용하는 방법을 볼 수 있을것입니다.
-It is meant to give you a quick taste of Spring Boot. 
-이것은 여러분에게 스프링부트를 빠르게 맛보게 하기 위한 것입니다.
-If you want to create your own Spring Boot-based project, visit [Spring Initializr](https://start.spring.io/), 
-만약 여러분이 스프링 부트 프로젝트를 만들고 싶다면 [Spring Initializr](https://start.spring.io/)를 방문하세요.
-fill in your project details, pick your options, and you can download either a Maven build file, or a bundled up project as a zip file.
-이 사이트에서 여러분이 프로젝트 정보를 입력하고 각종 옵션들을 선택하면 Maven 빌드 파일이나 프로젝트를 압축파일로 제공해 줄 것입니다.
+이 가이드는 여러분이 어떻게 스프링 부트 개발을 빠르고 용이하게 할 수 있는가를 샘플을 만들며 알려줍니다. 여러분이 스프링 시작 가이드를 더 읽으면 다양한 스프링 부트를 사용하는 방법을 볼 수 있을 것입니다. 이러한 방법들은 여러분에게 스프링 부트를 빠르게 맛보게 하기 위한 것입니다. 만약 여러분이 스프링 부트 프로젝트를 만들고 싶다면 [Spring Initializr](https://start.spring.io/)를 방문하세요. 이 사이트에서 여러분이 프로젝트 정보를 입력하고 각종 옵션들을 선택하면 Maven 빌드 파일이나 프로젝트를 압축파일로 제공해 줄 것입니다.
 
-## 만들것
-You’ll build a simple web application with Spring Boot and add some useful services to it.
-여러분은 스프링 부트를 사용한 간단한 웹 어플리케이션을 만들고 여러가지 사용할만한 서비스를 추가할 것입니다.
+## 무엇을 만들게 되는가?
+여러분은 스프링 부트를 사용한 간단한 웹 어플리케이션을 만들고 여러 가지 사용할만한 서비스를 추가할 것입니다.
 
-## 필요한것
-* About 15 minutes
+## 무엇이 필요한가?
 * 약 15분의 시간
-* A favorite text editor or IDE
 * 좋아하는 텍스트에디터나 IDE
-* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later
 * [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 이상
-* [Gradle 4+](http://www.gradle.org/downloads) or [Maven 3.2+](https://maven.apache.org/download.cgi)
 * [Gradle 4+](http://www.gradle.org/downloads) 또는 [Maven 3.2+](https://maven.apache.org/download.cgi)
-* You can also import the code straight into your IDE:
 * 여러분이 코드를 IDE에 직접 가져오려면 다음을 참고하세요:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
@@ -165,42 +150,19 @@ dependencies {
 * 이 가이드를 Intellij IDEA에서 작동시키는 법을 알고 싶으면 [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)을 읽어주세요.
 
 ## 스프링부트로 무엇을 할 수 있는지 배우기
-Spring Boot offers a fast way to build applications. 
-스프링부트는 어플리케이션을 빠르게 빌드할 수 있는 방법을 제공합니다.
-It looks at your classpath and at beans you have configured, makes reasonable assumptions about what you’re missing, and adds it. 
-스프링부트는 여러분이 설정한 클래스 패스의 빈들을 보고 누락된 부분에 대해 타당하게 추정되는 부분은 추가합니다.
-With Spring Boot you can focus more on business features and less on infrastructure.
-스프링 부트를 사용하면 여러분은 환경설정등의 부분 보다 비지니스 기능 구현에 더 집중할 수 있습니다.
+스프링 부트는 어플리케이션을 빠르게 빌드 할 수 있는 방법을 제공합니다. 스프링 부트는 여러분이 설정한 클래스 패스의 빈을 보고 누락된 부분에 대해 타당하게 추정되는 부분은 추가합니다. 그래서 스프링 부트를 사용하면 여러분은 환경설정 등의 부분 보다 비즈니스 기능 구현에 더 집중할 수 있습니다.
 
 예를 들면:
 
-* Got Spring MVC? There are several specific beans you almost always need, and Spring Boot adds them automatically. 
-스프링 MVC를 원하십니까? 스프링 MVC에 대부분 들어가는 여러 빈을 스프링 부트는 자동으로 추가해줍니다.
-A Spring MVC app also needs a servlet container, so Spring Boot automatically configures embedded Tomcat.
-그리고 스프링 MVC는 항상 서블릿 컨테이너가 필요한데 스프링 부트는 자동으로 Tomcat을 내장하고 있습니다.
-* Got Jetty? If so, you probably do NOT want Tomcat, but instead embedded Jetty. Spring Boot handles that for you.
-Jetty를 원하십니까? 여러분이 만약 Tomcat대신 Jetty를 내장하기 원한다면 스프링 부트는 여러분을 위해 해줄것입니다.
-* Got Thymeleaf? There are a few beans that must always be added to your application context; Spring Boot adds them for you.
-Thymeleaf를 원하십니까? 스프링 부트는 Themyleaf 설정에 필요한 여러 빈들을 여러분의 어플리케이션 컨텍스트에 넣을 것입니다.
+* 스프링 MVC를 원하십니까? 스프링 MVC에 대부분 들어가는 여러 빈을 스프링 부트는 자동으로 추가해줍니다. 그리고 스프링 MVC는 항상 서블릿 컨테이너가 필요한데 스프링 부트는 자동으로 Tomcat을 내장하고 있습니다.
+* Jetty를 원하십니까? 여러분이 만약 Tomcat 대신 Jetty를 내장하기 원한다면 스프링 부트는 여러분을 위해 해줄 것입니다.
+* Thymeleaf를 원하십니까? 스프링 부트는 Themyleaf 설정에 필요한 여러 빈들을 여러분의 어플리케이션 컨텍스트에 넣을 것입니다.
 
-These are just a few examples of the automatic configuration Spring Boot provides. 
-위의 경우는 스프링 부트가 제공하는 자동 설정의 몇가지 예시 입니다.
-At the same time, Spring Boot doesn’t get in your way. 
-동시에 스프링부트는 여러분을 방해하지 않습니다.
-For example, if Thymeleaf is on your path, Spring Boot adds a `SpringTemplateEngine` to your application context automatically. 
-예를 들어, Thymeleaf가 프로젝트의 경로에 있다면, Spring Boot는 자동으로 어플리케이션 컨텍스트에 `SpringTemplateEngine`을 추가합니다
-But if you define your own `SpringTemplateEngine` with your own settings, then Spring Boot won’t add one. 
-그러나 만약 여러분이 직접 `SpringTemplateEngine`를 추가한 것이 있다면 스프링 부트는 해당 설정을 추가하지 않습니다.
-This leaves you in control with little effort on your part.
-이러한 스프링 부트의 행동은 여러분이 작업한 파트에 최소의 영향을 끼치게 합니다.
+위의 경우는 스프링 부트가 제공하는 자동 설정의 몇 가지 예시입니다. 동시에 스프링 부트는 여러분을 방해하지 않습니다. 예를 들어, Thymeleaf가 프로젝트의 경로에 있다면, Spring Boot는 자동으로 어플리케이션 컨텍스트에 `SpringTemplateEngine`을 추가합니다 그러나 만약 여러분이 직접 `SpringTemplateEngine`를 추가한 것이 있다면 스프링 부트는 해당 설정을 추가하지 않습니다. 이러한 스프링 부트의 행동은 여러분이 작업한 파트에 최소의 영향을 끼치게 합니다.
 
-> Spring Boot doesn’t generate code or make edits to your files. 
-Instead, when you start up your application, Spring Boot dynamically wires up beans and settings and applies them 
-to your application context.
-> 스프링 부트는 코드를 생성하거나 파일을 편집하지 않습니다. 대신 여러분이 어플리케이션을 시작할때, 스프링 부트는 동적으로 어플리케이션 컨텍스트에 빈과 설정을 적용합니다.
+> 스프링 부트는 코드를 생성하거나 파일을 편집하지 않습니다. 대신 여러분이 어플리케이션을 시작할 때, 스프링 부트는 동적으로 어플리케이션 컨텍스트에 빈과 설정을 적용합니다.
 
 ## 간단한 웹 어플리케이션 만들기
-Now you can create a web controller for a simple web application.
 이제 간단한 웹 어플리케이션을 위한 웹 컨트롤러를 만들어 보겠습니다.
 
 `src/main/java/hello/HelloController.java`
@@ -222,18 +184,9 @@ public class HelloController {
 }
 ```
 
-The class is flagged as a `@RestController`, meaning it’s ready for use by Spring MVC to handle web requests. 
-이 클래스는 스프링 MVC에서 요청을 다루기 위한 `@RestController`를 가지고 있습니다.
-`@RequestMapping` maps `/` to the `index()` method. 
-그리고 `@RequestMapping`으로 `/` 요청시 `index()`를 매핑해줍니다.
-When invoked from a browser or using curl on the command line, the method returns pure text. 
-브라우저에서 호출하거나 프롬프트에서 curl을 사용할 때 위의 메서드는 순수 텍스트를 반환합니다.
-That’s because `@RestController` combines `@Controller` and `@ResponseBody`, 
-two annotations that results in web requests returning data rather than a view.
-이것은 왜냐하면 `@RestController`가 `@Controller`와 `@ResponseBody`가 결합되어서 뷰가 아닌 데이터를 반환하도록 해주기 때문입니다.
+이 클래스는 스프링 MVC에서 요청을 다루기 위한 `@RestController`가 표시되어 있습니다. 그리고 `@RequestMapping`으로 `/` 요청 시 `index()`메소드가 응답하도록 매핑해줍니다. 브라우저에서 호출하거나 프롬프트에서 curl을 사용할 때 위의 메서드는 순수 텍스트를 반환합니다. 이것은 왜냐하면 `@RestController`가 `@Controller`와 `@ResponseBody`가 결합되어서 뷰가 아닌 데이터를 반환하도록 해주기 때문입니다.
 
 ## 어플리케이션 클래스 만들기
-Here you create an `Application` class with the components:
 여러분은 컴포넌트를 가지고 있는 `Application` 클래스를 만들어 보겠습니다.
 
 `src/main/java/hello/Application.java`
@@ -281,30 +234,23 @@ public class Application {
 * 보통 Spring MVC app에서는 `@EnableWebMvc`를 붙이지만, 스프링 부트에서는 클래스 패스 위에 자동으로 **spring-webmvc**가 붙습니다. 이 플래그는 이 어플리케이션이 웹 어플리케이션이라는 것을 표시하고 `DispatcherServlet` 설정 등 핵심 행동을 하도록 합니다.
 * `@ComponentScan`는 `hello` 패키지 내의 컨트롤러, 서비스, 컴포넌트(구성요소), 설정등을 찾도록 합니다.
 
-어플리케이션 실행을 위한 `main()` 메소드에서는 스프링 부트에서 실행에 사용하는 `SpringApplication.run()` 메소드를 사용합니다. 여러분은 **web.xml**을 포함해서 한줄의 XML도 없다는 것을 알고 있으신가요? 이 웹 어플리케이션은 100% 순수한 자바로 되어있으며 여러분은 내부구조 설정을 위해 전혀 신경 쓸 필요가 없습니다.
+어플리케이션 실행을 위한 `main()` 메소드에서는 스프링 부트에서 실행에 사용하는 `SpringApplication.run()` 메소드를 사용합니다. 여러분은 **web.xml**을 포함해서 한 줄의 XML도 없다는 것을 알고 있으신가요? 이 웹 어플리케이션은 100% 순수한 자바로 되어있으며 여러분은 내부 구조 설정을 위해 전혀 신경 쓸 필요가 없습니다.
 
-There is also a `CommandLineRunner` method marked as a `@Bean` and this runs on start up. 
-이 클래스는 또한 어플리케이션 시작시 `@Bean`으로 표시된 `CommandLineRunner` 메소드가 실행됩니다.
-It retrieves all the beans that were created either by your app or were automatically added thanks to Spring Boot. 
-It sorts them and prints them out.
-이 메소드는 스프링 부트가 자동으로 추가하거나 여러분이 추가한 빈을 가져와서 정렬 후 출력합니다.
+그리고 어플리케이션 시작 시 `@Bean`이 표시된 `CommandLineRunner` 메소드가 실행됩니다. 이 메소드는 스프링 부트가 자동으로 추가하거나 여러분이 추가한 빈을 가져와서 정렬 후 출력합니다.
 
 ## 어플리케이션 실행하기
-To run the application, execute:
 어플리케이션을 실행하기 위해 입력합니다:
 
 ```
 ./gradlew build && java -jar build/libs/gs-spring-boot-0.1.0.jar
 ```
 
-If you are using Maven, execute:
 만약 여러분이 Maven을 쓰고 있다면 입력해주세요:
 
 ```
 mvn package && java -jar target/gs-spring-boot-0.1.0.jar
 ```
 
-You should see some output like this:
 여러분은 아래와 같은 출력을 볼 것입니다:
 
 ```
@@ -345,10 +291,9 @@ tomcatEmbeddedServletContainerFactory
 viewControllerHandlerMapping
 ```
 
-You can clearly see **org.springframework.boot.autoconfigure** beans. There is also a `tomcatEmbeddedServletContainerFactory`.
 여러분은 **org.springframework.boot.autoconfigure**와 `tomcatEmbeddedServletContainerFactory` 빈을 정확하게 볼 수 있습니다. 
-Check out the service.
-그리고 해당 서비스를 확인해보세요.
+
+그리고 해당 서비스의 동작을 확인해보세요.
 
 ```
 $ curl localhost:8080
@@ -356,18 +301,14 @@ Greetings from Spring Boot!
 ```
 
 ## 유닛테스트 추가하기
-You will want to add a test for the endpoint you added, and Spring Test already provides some machinery for that, 
-and it’s easy to include in your project.
-여러분이 클라이언트의 요청에 대한 응답 테스트를 하기 원하신다면 스프링 테스트를 프로젝트 안에 넣어서 테스트 할 수 있도록 제공하고 있습니다.
+여러분이 클라이언트의 요청에 대한 응답 테스트를 하기 원하신다면 스프링 테스트를 프로젝트 안에 넣어서 테스트할 수 있도록 제공하고 있습니다.
 
-Add this to your build file’s list of dependencies:
-여러분의 의존성 파일 리스트에 다음을 입력해 주세요:
+여러분의 의존성 파일 리스트에 다음과 같이 추가합니다:
 
 ```gradle
     testCompile("org.springframework.boot:spring-boot-starter-test")
 ```
 
-If you are using Maven, add this to your list of dependencies:
 만약 Maven을 사용중이라면 다음을 입력해 주세요:
 
 ```xml
@@ -378,7 +319,7 @@ If you are using Maven, add this to your list of dependencies:
         </dependency>
 ```
 
-Now write a simple unit test that mocks the servlet request and response through your endpoint:
+이제 서블릿 요청 및 응답에 대한 유닛 테스트 mock을 작성해 보겠습니다.
 
 `src/test/java/hello/HelloControllerTest.java`
 
@@ -416,9 +357,9 @@ public class HelloControllerTest {
 }
 ```
 
-The `MockMvc` comes from Spring Test and allows you, via a set of convenient builder classes, to send HTTP requests into the `DispatcherServlet` and make assertions about the result. Note the use of the `@AutoConfigureMockMvc` together with `@SpringBootTest` to inject a `MockMvc` instance. Having used `@SpringBootTest` we are asking for the whole application context to be created. An alternative would be to ask Spring Boot to create only the web layers of the context using the `@WebMvcTest`. Spring Boot automatically tries to locate the main application class of your application in either case, but you can override it, or narrow it down, if you want to build something different.
+`MockMvc`는 스프링 테스트에서 작성되었으며 편리한 빌더 클래스를 통해 `DispatcherServlet`로 HTTP 요청을 보내 테스트 결과를 만듭니다. 그리고 `@AutoConfigureMockMvc`와 `@SpringBootTest`를 사용해서 `MockMvc` 인스턴스를 주입(inject) 하는 것을 확인할 수 있습니다. `@SpringBootTest`를 사용하면 어플리케이션 컨텍스트가 만들어지도록 해줍니다. 아니면 `@WebMvcTest`를 사용하여 스프링 부트가 웹 레이어만 만들도록 할 수도 있습니다. 기본적으로 스프링 부트는 자동적으로 어플리케이션 전체 범위에서 메인 클래스를 찾지만 여러분이 무엇인가 다른 작업을 하고 싶다면 이것을 오버라이드 해서 범위를 줄일 수 있습니다.
 
-As well as mocking the HTTP request cycle we can also use Spring Boot to write a very simple full-stack integration test. For example, instead of (or as well as) the mock test above we could do this:
+HTTP 요청 사이클에 대한 테스트뿐만 아니라 우리가 쉽게 풀 스택 테스트를 할 수 있도록 해줍니다. 예를 들면 mock 테스트 대신에 이것을 시도해 볼 수 있습니다:
 
 `src/test/java/hello/HelloControllerIT.java`
 
@@ -466,18 +407,18 @@ public class HelloControllerIT {
 }
 ```
 
-The embedded server is started up on a random port by virtue of the `webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT` and the actual port is discovered at runtime with the `@LocalServerPort`.
+위 코드에서 내장된 서버는 `webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT`에 의해 랜덤 포트로 실행되지만 실제 작동될 포트는 `@LocalServerPort`로 확인 가능합니다.
 
-## Add production-grade services
-If you are building a web site for your business, you probably need to add some management services. Spring Boot provides several out of the box with its [actuator module](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready), such as health, audits, beans, and more.
+## 상용 등급의 서비스 추가하기
+여러분이 상업적으로 웹사이트를 만든다면 아마도 서비스 관리가 필요할 것입니다. 그래서 스프링 부트는 [actuator module](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready)를 통해서 서버의 상태나 빈 등 여러 가지 모니터링 옵션을 제공합니다.
 
-Add this to your build file’s list of dependencies:
+여러분의 의존성 파일 리스트에 다음과 같이 추가합니다:
 
 ```gradle
     compile("org.springframework.boot:spring-boot-starter-actuator")
 ```
 
-If you are using Maven, add this to your list of dependencies:
+만약 Maven을 사용중이라면 다음을 입력해 주세요:
 
 ```xml
         <dependency>
@@ -486,19 +427,19 @@ If you are using Maven, add this to your list of dependencies:
         </dependency>
 ```
 
-Then restart the app:
+그리고 어플리케이션을 재시작합니다:
 
 ```
 ./gradlew build && java -jar build/libs/gs-spring-boot-0.1.0.jar
 ```
 
-If you are using Maven, execute:
+만약 Maven을 사용중이라면 아래 명령어를 실행해주세요:
 
 ```
 mvn package && java -jar target/gs-spring-boot-0.1.0.jar
 ```
 
-You will see a new set of RESTful end points added to the application. These are management services provided by Spring Boot.
+여러분은 어플리케이션에 새로운 RESTful 포인트가 추가된 것을 볼 수 있습니다. 그리고 이것은 스프링 부트가 제공하는 관리를 위한 서비스입니다.
 
 ```
 2018-03-17 15:42:20.088  ... : Mapped "{[/error],produces=[text/html]}" onto public org.s...
@@ -511,39 +452,39 @@ You will see a new set of RESTful end points added to the application. These are
 2018-03-17 15:42:20.491  ... : Mapped "{[/actuator],methods=[GET],produces=[application/vnd.spring...
 ```
 
-They include: errors, [actuator/health](http://localhost:8080/actuator/health), [actuator/info](http://localhost:8080/actuator/info), [actuator](http://localhost:8080/actuator).
+에러표시를 위한 것과 [actuator/health](http://localhost:8080/actuator/health), [actuator/info](http://localhost:8080/actuator/info), [actuator](http://localhost:8080/actuator)가 추가되었습니다.
 
-> There is also a `/actuator/shutdown` endpoint, but it’s only visible by default via JMX. To [enable it as an HTTP endpoint](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready-endpoints-enabling-endpoints), add `management.endpoints.shutdown.enabled=true` to your `application.properties` file.
+> 여기에는 `/actuator/shutdown`도 있지만 JMX를 통해서만 볼 수 있습니다. 해당 기능을 위해서는 `application.properties` 파일의 `management.endpoints.shutdown.enabled=true`를 추가해주시고 정보를 더 얻으시려면 [enable it as an HTTP endpoint](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready-endpoints-enabling-endpoints)를 읽어주세요.
 
-It’s easy to check the health of the app.
+방금 추가한 기능은 어플리케이션의 상태를 체크하기 쉽도록 해줍니다.
 
 ```
 $ curl localhost:8080/actuator/health
 {"status":"UP"}
 ```
 
-You can try to invoke shutdown through curl.
+curl을 통해 shutdown을 호출할 수도 있습니다.
 
 ```
 $ curl -X POST localhost:8080/actuator/shutdown
 {"timestamp":1401820343710,"error":"Method Not Allowed","status":405,"message":"Request method 'POST' not supported"}
 ```
 
-Because we didn’t enable it, the request is blocked by the virtue of not existing.
+하지만 우리가 이 기능을 활성화하지 않아서 요청은 거부되었습니다.
 
-For more details about each of these REST points and how you can tune their settings with an `application.properties` file (in `src/main/resources`), you can read detailed [docs about the endpoints](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready-endpoints).
+만약 여러분이 `application.properties` 파일의 REST 포인트에 대한 각각 상세한 정보를 얻고 튜닝하기를 원하신다면 [docs about the endpoints](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#production-ready-endpoints)를 읽어주세요.
 
-## View Spring Boot’s starters
-You have seen some of [Spring Boot’s "starters"](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#using-boot-starter). You can see them all [here in source code](https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot-starters).
+## 스프링 부트 스타터 보기
+여러분은 [Spring Boot’s "starters"](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#using-boot-starter). You can see them all [here in source code](https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot-starters)의 일부를 보았습니다.
 
-## JAR support and Groovy support
-The last example showed how Spring Boot makes it easy to wire beans you may not be aware that you need. And it showed how to turn on convenient management services.
+## JAR 지원과 Groovy 지원
+마지막 예제에서 스프링 부트가 우리가 필요성을 모를 수도 있는 빈의 연결을 쉽게 할 수 있다는 것을 보여주었습니다. 그리고 관리 서비스를 편리하게 켤 수 있는지를 보여주었습니다.
 
-But Spring Boot does yet more. It supports not only traditional WAR file deployments, but also makes it easy to put together executable JARs thanks to Spring Boot’s loader module. The various guides demonstrate this dual support through the `spring-boot-gradle-plugin` and `spring-boot-maven-plugin`.
+그러나 스프링 부트는 더 많은 것을 합니다. 스프링 부트는 전통적인 버포를 위한 WAR 파일을 만드는 것 외에도 로더 모듈을 통해 실행 가능한 JAR를 쉽게 만들 수 있도록 해줍니다. 여러 스프링 시작 가이드는 `spring-boot-gradle-plugin`과 `spring-boot-maven-plugin`를 동시 지원하는 것을 보여주고 있습니다.
 
-On top of that, Spring Boot also has Groovy support, allowing you to build Spring MVC web apps with as little as a single file.
+위와 같이 스프링 부트는 MVC 웹 앱을 하나의 파일로 만들 수 있도록 Groovy 또한 지원합니다.
 
-Create a new file called **app.groovy** and put the following  code in it:
+**app.groovy**라 명명된 파일을 만들고 아래와 같은 코드를 넣어보겠습니다:
 
 ```groovy
 @RestController
@@ -557,32 +498,32 @@ class ThisWillActuallyRun {
 }
 ```
 
-> It doesn’t matter where the file is. You can even fit an application that small inside a [single tweet](https://twitter.com/rob_winch/status/364871658483351552)!
+> 파일이 어디 있는지 문제 되지는 않습니다. [single tweet](https://twitter.com/rob_winch/status/364871658483351552)처럼 어플리케이션 안에 작은 응용 프로그램을 넣을 수도 있습니다.
 
-Next, [install Spring Boot’s CLI](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#getting-started-installing-the-cli).
+다음 [install Spring Boot’s CLI](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#getting-started-installing-the-cli)를 작업해 주세요.
 
-Run it as follows:
+그리고 아래의 내용을 따라서 입력합니다:
 
 ```
 $ spring run app.groovy
 ```
 
-> This assumes you shut down the previous application, to avoid a port collision.
+> 포트 충돌을 막기 위해서 실행 중인 이전 어플리케이션이 종료되었다고 가정합니다.
 
-From a different terminal window:
+다른 터미널창에서 입력해주세요:
 
 ```
 $ curl localhost:8080
 Hello World!
 ```
 
-Spring Boot does this by dynamically adding key annotations to your code and using [Groovy Grape](http://groovy.codehaus.org/Grape) to pull down libraries needed to make the app run.
+스프링 부트는 여러분의 코드에 동적으로 키 어노테이션을 추가하고 [Groovy Grape](http://groovy.codehaus.org/Grape)를 사용해서 앱의 실행에 필요한 라이브러리를 다운받습니다.
 
-## Summary
-Congratulations! You built a simple web application with Spring Boot and learned how it can ramp up your development pace. You also turned on some handy production services. This is only a small sampling of what Spring Boot can do. Checkout [Spring Boot’s online docs](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle) if you want to dig deeper.
+## 요약
+축하합니다! 여러분은 스프링 부트로 간단한 웹 애플리케이션을 구축하고 개발 속도를 높일 수 있는 방법을 배웠습니다. 그리고 간단한 서비스를 만들고 실행해보았습니다. 이것은 스프링 부트로 할 수 있는 작은 샘플일 뿐입니다. 여러분이 좀 더 깊게 알기를 원한다면 [Spring Boot’s online docs](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle)를 읽어보세요.
 
-## See Also
-The following guides may also be helpful:
+## 추가로 볼만한 것
+다음 가이드 또한 도움이 될 수 있습니다:
 
 * [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
