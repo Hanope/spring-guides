@@ -40,7 +40,7 @@
 ```
 
 ### Gradle 빌드 파일 만들기
-[초기 Gradle build file](https://github.com/spring-guides/gs-validating-form-input/blob/master/initial/build.gradle)은 아래와 같습니다.
+[초기 Gradle build file](https://github.com/spring-guides/gs-spring-boot/blob/master/initial/build.gradle)은 아래와 같습니다.
 
 `build.gradle`
 
