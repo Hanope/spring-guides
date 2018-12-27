@@ -1,36 +1,36 @@
-## Securing a Web Application
-This guide walks you through the process of creating a simple web application with resources that are protected by Spring Security.
+## 웹 어플리케이션 보호하기
+이 가이드는 리소스를 활용하는 간단한 웹 어플리케이션을 스프링 시큐리티로 보호하는 과정으로 안내합니다.
 
-## What you’ll build
-You’ll build a Spring MVC application that secures the page with a login form backed by a fixed list of users.
+## 무엇을 만들게 되는가?
+여러분은 스프링 MVC를 활용해 백엔드에 직접 작성된 유저 리스트를 사용하여 보호된 로그인 폼 페이지를 만들 것입니다.
 
-## What you’ll need
-* About 15 minutes
-* A favorite text editor or IDE
-* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later
-* [Gradle 4+](http://www.gradle.org/downloads) or [Maven 3.2+](https://maven.apache.org/download.cgi)
-* You can also import the code straight into your IDE:
+## 무엇이 필요한가?
+* 약 15분의 시간
+* 좋아하는 텍스트 에디터나 IDE
+* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 이상
+* [Gradle 4+](http://www.gradle.org/downloads) 또는 [Maven 3.2+](https://maven.apache.org/download.cgi)
+* 여러분이 코드를 IDE에 직접 가져오려면 다음을 참고하세요:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
 
-## How to complete this guide
-Like most Spring [Getting Started guides](http://spring.io/guides), you can start from scratch and complete each step, or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+## 이 가이드를 완료하는 방법
+대부분의 [스프링 시작 가이드](http://spring.io/guides)처럼 처음부터 하나씩 완성해 가거나 익숙한 시작 부분은 건너뛰어도 됩니다. 어느 방법을 선택하시더라도 작동되는 코드가 완성될 것입니다.
 
-To **start from scratch**, move on to [Build with Gradle](#build-with-gradle).
+**처음부터 작업하실 분**은 [Gradle을 사용한 빌드](#Gradle을-사용한-빌드)로 가세요.
 
-To **skip the basics**, do the following:
+**시작부분을 건너뛰실 분**은 아래방법을 따라하세요:
 
-* [Download](https://github.com/spring-guides/gs-securing-web/archive/master.zip) and unzip the source repository for this guide, or clone it using [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-securing-web.git`
-* cd into `gs-securing-web/initial`
-* Jump ahead to [Set up Spring Security](#set-up-spring-security).
+* [다운로드](https://github.com/spring-guides/gs-securing-web/archive/master.zip) 하시고 압축파일을 풀어주시거나 [GIT](http://spring.io/understanding/Git)을 사용해 복제해주세요 (명령어): `git clone https://github.com/spring-guides/gs-securing-web.git`
+* 소스의 압축을 해제한 폴더에서 `gs-securing-web/initial`로 이동합니다.(cd)
+* [Set up Spring Security](#set-up-spring-security)로 이동합니다.
 
-**When you’re finished**, you can check your results against the code in `gs-securing-web/complete`.
+**다 끝나고나서**, `gs-securing-web/complete`의 코드와 비교해서 맞는지 확인해보세요.
 
-## Build with Gradle
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Gradle](http://gradle.org/) and [Maven](https://maven.apache.org/) is included here. If you’re not familiar with either, refer to [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) or [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Gradle을 사용한 빌드
+첫 번째로 여러분은 빌드 스크립트를 만들어야 합니다. 여러분은 스프링 어플리케이션을 빌드 할 때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Gradle](http://gradle.org/)이나 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다. Gradle이나 Maven에 익숙하지 않은 경우, [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) 또는 [Building Java Projects with Maven (http://spring.io/guides/gs/maven) 을 참조하세요.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 폴더 구조 만들기
+프로젝트 폴더를 선택하시고 안에 다음과 같이 하위 폴더를 만들어주세요 예를 들면, *nix(linux, unix)에서는 `mkdir -p src/main/java/hello`를 입력하면 됩니다:
 
 ```
 └── src
@@ -39,8 +39,11 @@ In a project directory of your choosing, create the following subdirectory struc
             └── hello
 ```
 
-### Create a Gradle build file
-Below is the [initial Gradle build file](https://github.com/spring-guides/gs-securing-web/blob/master/initial/build.gradle).
+### Gradle 빌드 파일 만들기
+[초기 Gradle build file](https://github.com/spring-guides/gs-validating-form-input/blob/master/initial/build.gradle)은 아래와 같습니다.
+
+### Gradle 빌드 파일 만들기
+[초기 Gradle build file](https://github.com/spring-guides/gs-securing-web/blob/master/initial/build.gradle)은 아래와 같습니다.
 
 `build.gradle`
 
@@ -82,17 +85,17 @@ dependencies {
 }
 ```
 
-The [Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html) provides many convenient features:
+[Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html)은 많고 편리한 기능을 제공합니다:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 이 플러그인은 클래스패스 위의 jar를 하나의 실행 가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
+* 이 플러그인은 `public static void main()`메소드를 찾아 실행 가능한 클래스로 표시를 해줍니다.
+* 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다. 여러분이 원하는 버전을 사용할 수도 있습니다만 기본적으로 Spring Boot에서 선택한 버전이 기본 제공됩니다.
 
-## Build with Maven
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org/) is included here. If you’re not familiar with Maven, refer to [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Maven을 사용한 빌드
+첫번째로 여러분은 빌드 스크립트를 만들어야 합니다. 여러분은 스프링 어플리케이션을 빌드할때 원하는 시스템을 사용할 수 있습니다만, 코드가 작동하기 위해서는 [Maven](https://maven.apache.org/)이 포함되어 있어야 합니다. Maven에 익숙하지 않은 경우, [Building Java Projects with Maven](http://spring.io/guides/gs/maven)을 참조하세요.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 폴더 구조 만들기
+프로젝트 폴더를 선택하시고 안에 다음과 같이 하위 폴더를 만들어주세요. 예를 들면, *nix(linux, unix)에서는 `mkdir -p src/main/java/hello`를 입력하면 됩니다:
 
 ```
 └── src
@@ -172,20 +175,20 @@ In a project directory of your choosing, create the following subdirectory struc
 </project>
 ```
 
-The [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin) provides many convenient features:
+이 [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin)은 많고 편리한 기능을 제공합니다.:
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 이 플러그인은 클래스패스 위의 jar를 하나의 실행가능한 jar로 모아서 여러분의 서비스를 실행하고 전송하는데 편리하게 만들어줍니다.
+* 이 플러그인은 `public static void main()`메소드를 찾아 실행 가능한 클래스로 표시를 해줍니다.
+* 이 플러그인은 [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞는 내장된 의존성 해석자를 제공합니다.
 
-## Build with your IDE
-* Read how to import this guide straight into [Spring Tool Suite](http://spring.io/guides/gs/sts/).
-* Read how to work with this guide in [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea).
+## 여러분의 IDE를 사용한 빌드 하기
+* 이 가이드를 STS에 직접 포함하는 방법을 알고싶으면 [Spring Tool Suite](http://spring.io/guides/gs/sts/)을 읽어주세요.
+* 이 가이드를 Intellij IDEA에서 작동시키는 법을 알고 싶으면 [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea)을 읽어주세요.
 
-## Create an unsecured web application
-Before you can apply security to a web application, you need a web application to secure. The steps in this section walk you through creating a very simple web application. Then you secure it with Spring Security in the next section.
+## 보호되지 않은 웹 어플리케이션 만들기
+웹 어플리케이션에 보안을 적용하기 전에 보안을 적용할 웹 어플리케이션이 필요합니다. 그래서 아래에서 매우 간단한 웹 어플리케이션을 만들어 보겠습니다. 그리고 그다음 단계에서 스프링 시큐리티로 보호해 보겠습니다.
 
-The web application includes two simple views: a home page and a "Hello World" page. The home page is defined in the following Thymeleaf template:
+이 웹 어플리케이션은 두 개의 뷰를 가지고 있습니다. 홈페이지와 "Hello World" 페이지입니다. 그리고 홈페이지는 Thymeleaf 템플릿으로 되어 있습니다.
 
 `src/main/resources/templates/home.html`
 
@@ -203,7 +206,7 @@ The web application includes two simple views: a home page and a "Hello World" p
 </html>
 ```
 
-As you can see, this simple view includes a link to the page "/hello". That is defined in the following Thymeleaf template:
+여러분이 봤듯이 이 간단한 뷰는 "/hello" 페이지로 가는 링크를 가지고 있습니다. 그리고 Thymeleaf 템플릿으로 정의되어 있습니다.
 
 `src/main/resources/templates/hello.html`
 
@@ -220,7 +223,7 @@ As you can see, this simple view includes a link to the page "/hello". That is d
 </html>
 ```
 
-The web application is based on Spring MVC. Thus you need to configure Spring MVC and set up view controllers to expose these templates. Here’s a configuration class for configuring Spring MVC in the application.
+이 웹 어플리케이션은 스프링 MVC 기반입니다. 그러므로 여러분은 스프링 MVC의 설정과 컨트롤러가 보여줄 템플릿을 만들 필요가 있습니다. 여기의 환경설정 클래스는 어플리케이션에서 스프링 MVC를 구성해줍니다.
 
 `src/main/java/hello/MvcConfig.java`
 
@@ -244,18 +247,18 @@ public class MvcConfig implements WebMvcConfigurer {
 }
 ```
 
-The `addViewControllers()` method (overriding the method of the same name in `WebMvcConfigurer`) adds four view controllers. Two of the view controllers reference the view whose name is "home" (defined in `home.html`), and another references the view named "hello" (defined in `hello.html`). The fourth view controller references another view named "login". You’ll create that view in the next section.
+`WebMvcConfigurer`클래스의 메소드를 오버라이드 한 `addViewControllers()` 메소드는 네 개의 뷰 컨트롤러를 추가합니다. 두 개의 뷰 컨트롤러는 "home" 뷰 이름과(`home.html`으로 정의됨) "hello" 이름을 참조합니다.(`hello.html`으로 정의됨) 네 번째 컨트롤러는 "login"이라는 다른 뷰 이름을 가지고 있고 이 페이지는 다음 섹션에서 만들 것입니다.
 
-At this point, you could jump ahead to [Make the application executable](http://spring.io/guides/gs/securing-web/#run_the_app) and run the application without having to login to anything.
+이 시점에서 [Make the application executable](http://spring.io/guides/gs/securing-web/#run_the_app)로 가셔서 로그인을 제외한 어플리케이션을 실행할 수 있습니다.
 
-With the base simple web application created, you can add security to it.
+여기까지 여러분이 시큐리티를 붙이기 위해 기반이 될 간단한 웹 어플리케이션을 만들어 보았습니다.
 
-## Set up Spring Security
-Suppose that you want to prevent unauthorized users from viewing the greeting page at "/hello". As it is now, if users click the link on the home page, they see the greeting with no barriers to stop them. You need to add a barrier that forces the user to sign in before seeing that page.
+## 스프링 시큐리티 설치하기
+여러분이 권한이 없는 유저가 "/hello" 페이지에 접근하는 것을 막기 원한다고 가정해봅시다. 현재 상황에서는 사용자가 홈페이지의 링크를 클릭하면 아무런 보호가 없이 페이지를 볼 수 있습니다. 여러분은 사용자가 페이지를 보기 전에 권한을 체크해서 막을 수 있는 기능의 추가가 필요할 것입니다.
 
-You do that by configuring Spring Security in the application. If Spring Security is on the classpath, then Spring Boot [automatically secures all HTTP endpoints](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#boot-features-security) with "basic" authentication. But you can further customize the security settings. The first thing you need to do is add Spring Security to the classpath.
+여러분은 어플리케이션안에 스프링 시큐리티를 설정할 수 있습니다. 스프링 시큐리티가 클래스 패스 안에 있다면, 스프링 부트는 기본 인증과 함께 [자동으로 마지막 경로(endpoints)를 보호합니다.](https://docs.spring.io/spring-boot/docs/2.0.5.RELEASE/reference/htmlsingle/#boot-features-security) 그러나 여러분은 보안 설정을 추가로 커스터마이징 할 수 있습니다. 그래도 가장 먼저 해야 할 일은 스프링 시큐리티를 클래스 패스 안에 추가하는 것이죠.
 
-With Gradle this would be one line in the `dependencies` closure:
+Gradle을 사용하신다면 `dependencies`에 다음과 같이 추가해주세요:
 
 `build.gradle`
 
@@ -267,7 +270,7 @@ dependencies {
 }
 ```
 
-With Maven this would be an extra entry added to `<dependencies>`:
+Maven을 사용하신다면 `<dependencies>`에 다음을 추가해주세요:
 
 `pom.xml`
 
@@ -282,7 +285,7 @@ With Maven this would be an extra entry added to `<dependencies>`:
 </dependencies>
 ```
 
-Here’s a security configuration that ensures that only authenticated users can see the secret greeting:
+아래는 인증된 사용자만 인사말을 볼 수 있도록 하는 보안 구성입니다:
 
 `src/main/java/hello/WebSecurityConfig.java`
 
@@ -332,15 +335,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
-The `WebSecurityConfig` class is annotated with `@EnableWebSecurity` to enable Spring Security’s web security support and provide the Spring MVC integration. It also extends `WebSecurityConfigurerAdapter` and overrides a couple of its methods to set some specifics of the web security configuration.
+`WebSecurityConfig` 클래스는 스프링 시큐리티의 웹 시큐리티 기능을 켜주고 스프링 MVC에게 설정을 제공하기 위한 `@EnableWebSecurity` 어노테이션을 가지고 있습니다. 이것은 또한 `WebSecurityConfigurerAdapter`를 확장하고 여러 메소드를 오버라이드 해서 웹 시큐리티의 구성을 설정합니다.
 
-The `configure(HttpSecurity)` method defines which URL paths should be secured and which should not. Specifically, the "/" and "/home" paths are configured to not require any authentication. All other paths must be authenticated.
+`configure(HttpSecurity)` 메소드는 URL 경로를 보호할지 안 할지 정의합니다. 특히, "/"하고 "/home"경로는 어떠한 인증도 필요 없이 접근 가능 하도록 설정되어 있으나 다른 경로는 반드시 인증이 필요하도록 구성되어 있습니다.
 
-When a user successfully logs in, they will be redirected to the previously requested page that required authentication. There is a custom "/login" page specified by `loginPage()`, and everyone is allowed to view it.
+만약 사용자가 성공적으로 로그인하면 사용자가 입력한 경로로 다시 이동합니다. `loginPage()`메소드는 특정된 "/login" 경로의 커스텀 페이지를 누구나 볼 수 있도록 허락합니다.
 
-As for the `userDetailsService()` method, it sets up an in-memory user store with a single user. That user is given a username of "user", a password of "password", and a role of "USER".
+`userDetailsService()`메소드는 하나의 사용자를 메모리 내부 저장소에 설정합니다. 이 사용자의 이름은 "user"이며 비밀번호는 "password"고 "USER"의 역할을 가집니다.
 
-Now we need to create the login page. There’s already a v iew controller for the "login" view, so you only need to create the login view itself:
+이제 우리는 로그인 페이지가 필요하게 되었습니다. 이미 뷰 컨트롤러에서는 "login" 뷰를 볼 준비가 되었으니 로그인 뷰를 만들어 보겠습니다:
 
 `src/main/resources/templates/login.html`
 
@@ -367,9 +370,9 @@ Now we need to create the login page. There’s already a v iew controller for t
 </html>
 ```
 
-As you can see, this Thymeleaf template simply presents a form that captures a username and password and posts them to "/login". As configured, Spring Security provides a filter that intercepts that request and authenticates the user. If the user fails to authenticate, the page is redirected to "/login?error" and our page displays the appropriate error message. Upon successfully signing out, our application is sent to "/login?logout" and our page displays the appropriate success message.
+저 페이지 내의 Thymeleaf 템플릿은 "/login"으로 사용자명과 비밀번호를 post로 제공합니다. 아까 설정한 대로 스프링 시큐리티는 요청을 가로채서 유저를 인증시키는 필터를 제공할 것입니다. 사용자가 인증에 실패한다면, 페이지는 "/login?error"로 이동하여 적당한 에러 메시지를 보여줄 것입니다. 사용자가 로그아웃하는데 성공한다면, 어플리케이션은 "/login?logout"로 보내서 적당한 성공 메시지를 보여줄 것입니다.
 
-Last we need to provide the user a way to display the current username and Sign Out. Update the `hello.html` to say hello to the current user and contain a "Sign Out" form as shown below
+마지막으로 사용자에게 현재 사용자 이름을 표시하고 로그 아웃 할 수 있는 방법을 제공해야 합니다. `hello.html`을 업데이트하여 현재 사용자의 이름을 보여주고 "Sign Out" 폼을 포함시켜 보겠습니다.
 
 `src/main/resources/templates/hello.html`
 
@@ -389,10 +392,10 @@ Last we need to provide the user a way to display the current username and Sign 
 </html>
 ```
 
-We display the username by using Spring Security’s integration with `HttpServletRequest#getRemoteUser()`. The "Sign Out" form submits a POST to "/logout". Upon successfully logging out it will redirect the user to "/login?logout".
+우리는 `HttpServletRequest#getRemoteUser()`와 스프링 시큐리티를 사용하여 사용자 이름을 표시할 것입니다. "로그아웃" 폼은 "/logout" 경로로 POST 요청을 하며 성공하면 "/login?logout"로 이동합니다.
 
-## Make the application executable
-Although it is possible to package this service as a traditional web application archive or [WAR](http://spring.io/understanding/WAR) file for deployment to an external application server, the simpler approach demonstrated below creates a standalone application. You package everything in a single, executable JAR file, driven by a good old Java `main()` method. And along the way, you use Spring’s support for embedding the [Tomcat](http://spring.io/understanding/Tomcat) servlet container as the HTTP runtime, instead of deploying to an external instance.
+## 실행가능한 어플리케이션 만들기
+해당 서비스를 외부 어플리케이션 서버에 배포하기 위해 전통적인 어플리케이션 파일 보관(아카이브,archive) 혹은 [WAR](http://spring.io/understanding/WAR) 파일로 만들 수도 있지만 다음과 같은 간단한 접근 방법으로 독립 실행형 응용 프로그램을 만들 수 있습니다. 여러분의 패키지는 오래되고 훌륭한 `main()` 메소드로 컨트롤되는 하나의 실행 가능한 JAR 파일로 만듭니다. 그리고 이 과정을 따라 하면 여러분은 외부 인스턴스에 배포하는 대신 HTTP 작동 환경을 위해 스프링에서 지원하는 내장된 [Tomcat](http://spring.io/understanding/Tomcat) 서블릿 컨테이너을 사용합니다.
 
 `src/main/java/hello/Application.java`
 
@@ -412,57 +415,57 @@ public class Application {
 }
 ```
 
-`@SpringBootApplication` is a convenience annotation that adds all of the following:
+`@SpringBootApplication`은 아래의 모든것을 더해주는 편리한 어노테이션입니다.
 
-* `@Configuration` tags the class as a source of bean definitions for the application context.
-* `@EnableAutoConfiguration` tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
-* Normally you would add `@EnableWebMvc` for a Spring MVC app, but Spring Boot adds it automatically when it sees **spring-webmvc** on the classpath. This flags the application as a web application and activates key behaviors such as setting up a DispatcherServlet.
-* `@ComponentScan` tells Spring to look for other components, configurations, and services in the `hello` package, allowing it to find the controllers.
+* `@Configuration` 태그는 어플리케이션 컨텍스트에서 이 클래스를 빈으로 정의합니다.
+* `@EnableAutoConfiguration`는 스프링 부트에서 클래스패스 세팅과 다른 빈과 다양한 설정을 해줍니다.
+* 보통 Spring MVC app에서는 `@EnableWebMvc`를 붙이지만, 스프링 부트에서는 클래스 패스 위에 자동으로 **spring-webmvc**가 붙습니다. 이 플래그는 이 어플리케이션이 웹 어플리케이션이라는 것을 표시하고 `DispatcherServlet` 설정 등 중요한 행동을 하도록 합니다.
+* `@ComponentScan`은 `hello` 패키지 내의 컨트롤러, 서비스, 컴포넌트(구성요소), 설정등을 찾도록 합니다.
 
-The `main()` method uses Spring Boot’s `SpringApplication.run()` method to launch an application. Did you notice that there wasn’t a single line of XML? No **web.xml** file either. This web application is 100% pure Java and you didn’t have to deal with configuring any plumbing or infrastructure.
+어플리케이션 실행을 위한 `main()` 메소드에서는 스프링 부트에서 실행에 사용하는 `SpringApplication.run()` 메소드를 사용합니다. 여러분은 **web.xml**을 포함해서 한 줄의 XML도 없다는 것을 알고 있으신가요? 이 웹 어플리케이션은 100% 순수한 자바로 되어있으며 여러분은 내부 구조 설정을 위해 전혀 신경 쓸 필요가 없습니다.
 
-## Build an executable JAR
-You can run the application from the command line with Gradle or Maven. Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+## 실행가능한 JAR로 빌드하기
+여러분은 Gradle이나 Maven을 이용한 커맨드 라인으로 이 어플리케이션을 실행할 수 있습니다. 또는 모든 필요한 의존성, 클래스, 자원 등을 포함한 하나의 실행 가능한 JAR로 빌드 할 수도 있습니다. 그래서 다양한 환경에서 개발 주기 전반에 걸쳐 버전을 올리고 서비스를 배포하는 것이 쉬워집니다.
 
-If you are using Gradle, you can run the application using `./gradlew bootRun`. Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+Gradle을 사용할 경우 `./gradlew bootRun` 명령어로 실행할 수 있습니다. 또는 `./gradlew build` 명령어로 JAR 파일을 만들고 다음과 같이 JAR 파일을 실행할 수 있습니다.
 
 ```
 java -jar build/libs/gs-securing-web-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+Maven을 사용할 경우 `./mvnw spring-boot:run` 명령어로 실행할 수 있습니다. 또는 `./mvnw clean package` 명령어로 JAR 파일을 만들고 다음과 같이 JAR 파일을 실행할 수 있습니다.
 
 ```
 java -jar target/gs-securing-web-0.1.0.jar
 ```
 
-> The procedure above will create a runnable JAR. You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+이 행동은 실행 가능한 JAR 파일을 만드는 방법입니다. 물론 [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/)도 대신 선택할 수 있습니다.
 
 ```
 ... app starts up ...
 ```
 
-Once the application starts up, point your browser to http://localhost:8080. You should see the home page:
+어플리케이션이 시작하고 나면 여러분의 웹 브라우저를 켜서 `http://localhost:8080`을 입력하시면 다음과 같은 홈페이지를 볼 수 있습니다:
 
 ![](http://spring.io/guides/gs/securing-web/images/home.png)
 
-When you click on the link, it attempts to take you to the greeting page at `/hello`. But because that page is secured and you have not yet logged in, it takes you to the login page:
+여러분이 링크를 클릭하면 `/hello`로 작성된 인사 페이지를 들어가려고 시도합니다. 그러나 페이지가 보호되고 있으며 여러분은 로그인하지 않았기 때문에 로그인 페이지로 이동하게 됩니다:
 
 ![](http://spring.io/guides/gs/securing-web/images/login.png)
 
-> If you jumped down here with the unsecured version, then you won’t see this login page. Feel free to back up and write the rest of the security-based code.
+> 만약 스프링 시큐리티를 설정하지 않은 버전으로 이곳에 내려왔다면 로그인 페이지는 볼 수 없습니다. 나머지 보안을 적용하는 코드는 원하실 때 작업하십시오.
 
-At the login page, sign in as the test user by entering "user" and "password" for the username and password fields, respectively. Once you submit the login form, you are authenticated and then taken to the greeting page:
+로그인 페이지에서 사용자 이름에 "user"를 입력하고 비밀번호에 "password"를 입력하고 로그인을 시도하면 인증되고 인사 페이지를 볼 수 있습니다.
 
 ![](http://spring.io/guides/gs/securing-web/images/greeting.png)
 
-If you click on the "Sign Out" button, your authentication is revoked, and you are returned to the log in page with a message indicating you are logged out.
+여러분이 "로그아웃" 버튼을 클릭하면 여러분의 인증은 취소되고, 로그아웃한 것을 나타내는 메시지와 함께 로그인 페이지로 돌아갑니다.
 
-## Summary
-Congratulations! You have developed a simple web application that is secured with Spring Security.
+## 요약
+축하합니다! 여러분은 스프링 시큐리티로 보호되는 간단한 웹 어플리케이션을 만들었습니다.
 
-## See Also
-The following guides may also be helpful:
+## 추가로 볼만한 것
+다음 가이드 또한 도움이 될 수 있습니다:
 
 * [Building an Application with Spring Boot](https://spring.io/guides/gs/spring-boot/)
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
