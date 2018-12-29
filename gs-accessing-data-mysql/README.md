@@ -1,39 +1,39 @@
-## Accessing data with MySQL
-This guide walks you through the process of creating a Spring application connected with a MySQL Database, as opposed to an in-memory, embedded database, which all of the other guides and many sample apps use. It uses Spring Data JPA to access the database, but this is only one of many possible choices (e.g. you could use plain Spring JDBC).
+## MySQL 데이터 접근하기
+이 가이드는 다른 모든 가이드와 많은 샘플 애플리케이션이 사용하는 메모리 내장형 데이터베이스와 달리 MySQL 데이터베이스와 연결된 스프링 애플리케이션을 만드는 과정을 안내합니다. 이 가이드는 Spring Data JPA를 사용하여 데이터베이스에 접근하지만, Spring Data JPA는 많은 가능한 선택 사항 중 하나 일뿐입니다 (예 : 일반 Spring JDBC를 사용할 수 있음).
 
-## What you’ll build
-You’ll create a MySQL database, build a Spring application and connect it with the newly created database.
+## 목표
+먼저 MySQL 데이터 베이스, 스프링 애플리케이션를 만들고 새로 생성된 데이터베이스와 연결을 목표로 합니다.
 
-> MySQL is licensed with the GPL, so any program binary that you distribute using it must use the GPL too. Refer to the [GNU General Public Licence](https://www.gnu.org/licenses/gpl.html).
+> MySQL은 GPL로 라이선스가 부여되어 있으므로 이를 사용하여 배포하는 모든 프로그램 바이너리도 GPL을 사용해야합니다. 자세한 내용은 [GNU General Public Licence](https://www.gnu.org/licenses/gpl.html)을 참고하세요.
 
-## What you’ll need
-* [MySQL](https://dev.mysql.com/downloads/) version 5.6 or better. If you have docker installed it might be useful to run the database as a [container](https://hub.docker.com/_/mysql/).
-* About 15 minutes
-* A favorite text editor or IDE
-* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later
-* [Gradle 4+](http://www.gradle.org/downloads) or [Maven 3.2+](https://maven.apache.org/download.cgi)
-* You can also import the code straight into your IDE:
+## 요구사항
+* [MySQL](https://dev.mysql.com/downloads/) 버전 5.6 또는 최신버전. 도커가 설치되어있는 경우 데이터베이스를 [컨테이너](https://hub.docker.com/_/mysql/)로 실행하는 것이 유용 할 수 있습니다.
+* 약 15분
+* 좋아하는 텍스트 에디터 또는 자신있는 개발환경
+* [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 또는 최신버전의 JDK
+* [Gradle 4+](http://www.gradle.org/downloads) 또는 [Maven 3.2+](https://maven.apache.org/download.cgi)
+* 다운로드 가능한 IDE:
   - [Spring Tool Suite (STS)](http://spring.io/guides/gs/sts)
   - [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea/)
 
-## How to complete this guide
-Like most Spring [Getting Started guides](http://spring.io/guides), you can start from scratch and complete each step, or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+## 이 가이드를 완성하는 방법
+대부분의 Spring Getting Started 가이드와 마찬가지로, 처음부터 시작하여 각 단계를 완료하거나 이미 익숙한 기본 설정 단계를 건너 뛸 수 있습니다.
 
-To **start from scratch**, move on to [Build with Gradle](#build-with-gradle).
+**처음부터 시작하려면**, [Gradle_빌드하기](#Gradle_빌드하기).
 
-To **skip the basics**, do the following:
+**기초 건너뛰기** :
 
-* [Download](https://github.com/spring-guides/gs-accessing-data-mysql/archive/master.zip) and unzip the source repository for this guide, or clone it using [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-accessing-data-mysql.git`
-* cd into `gs-accessing-data-mysql/initial`
-* Jump ahead to [Create the database](#create-the-database).
+* [다운로드](https://github.com/spring-guides/gs-accessing-data-mysql/archive/master.zip)하여 압축을 풀거나 레파지토리를 클론하여 사용하세요 [Git](http://spring.io/understanding/Git): `git clone https://github.com/spring-guides/gs-accessing-data-mysql.git`
+* cd 로 폴더 이동 `gs-accessing-data-mysql/initial`
+* 이동하기 [데이터베이스_생성하기](#create-the-database).
 
-**When you’re finished**, you can check your results against the code in `gs-accessing-data-mysql/complete`.
+**완성 했을 경우**, `gs-accessing-data-mysql/complete`의 코드와 비교하여 결과를 확인할 수 있습니다.
 
-## Build with Gradle
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Gradle](http://gradle.org/) and [Maven](https://maven.apache.org/) is included here. If you’re not familiar with either, refer to [Building Java Projects with Gradle](http://spring.io/guides/gs/gradle) or [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Gradle_빌드하기
+먼저 기본 빌드 스크립트를 설정합니다. Spring을 사용하여 응용 프로그램을 빌드 할 때 원하는 빌드 시스템을 사용할 수 있지만 [Gradle](http://gradle.org/)을 사용하여 작업해야하는 코드와 [Maven](https://maven.apache.org/)을 사용하여 작업해야하는 방법이 포함되어 있습니다. 익숙하지 않은 경우 [Gradle을 사용하여 Java 프로젝트 빌드하기](http://spring.io/guides/gs/gradle) 또는 [Maven을 사용하여 Java 프로젝트 빌드하기](http://spring.io/guides/gs/maven) 를 참조하십시오.
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 다음과 같은 하위 디렉토리 구조를 만듭니다. *nix 시스템에서는 `mkdir -p src/main/java/hello` 를 사용합니다 :
 
 ```
 └── src
@@ -42,8 +42,8 @@ In a project directory of your choosing, create the following subdirectory struc
             └── hello
 ```
 
-### Create a Gradle build file
-Below is the [initial Gradle build file](https://github.com/spring-guides/gs-accessing-data-mysql/blob/master/initial/build.gradle).
+### Gradle 빌드 파일 만들기
+아래는 [초기 Gradle 빌드 파일](https://github.com/spring-guides/gs-accessing-data-mysql/blob/master/initial/build.gradle)입니다.
 
 `build.gradle`
 
@@ -88,17 +88,17 @@ dependencies {
 }
 ```
 
-The [Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html) provides many convenient features:
+[Spring Boot gradle plugin](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html)은 많은 편리한 기능을 제공합니다 :
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 클래스패스와 빌드파일을 모으고 실행할 수있는 "über-jar"를 하나 만들고 실행하여 서비스를 실행하고 전송하는 것이 더 편리합니다.
+* 이것은 `public static void main()`메소드를 검색하여 실행 가능한 클래스로 변환한다.
+* [스프링 부트 의존성](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞게 버전 번호를 설정하는 빌트인 의존성 분석기를 제공합니다. 원하는 모든 버전을 무시할 수 있지만 기본적으로 Boot에서 선택한 버전 세트가 사용됩니다.
 
-## Build with Maven
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org/) is included here. If you’re not familiar with Maven, refer to [Building Java Projects with Maven](http://spring.io/guides/gs/maven).
+## Maven으로 빌드
+먼저 기본 빌드 스크립트를 설정합니다. Spring을 사용하여 응용 프로그램을 빌드 할 때 원하는 빌드 시스템을 사용할 수 있지만 [Maven](https://maven.apache.org/)을 사용하여 작업해야하는 코드가 여기에 포함됩니다. Maven에 익숙하지 않은 경우 [Maven으로 Java 프로젝트 빌드하기](http://spring.io/guides/gs/maven)를 참조하십시오. 
 
-### Create the directory structure
-In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+### 디렉토리 구조 만들기
+선택한 프로젝트 디렉토리에서 다음과 같은 하위 디렉토리 구조를 만듭니다. *nix 시스템에서는 `mkdir -p src/ main/java/hello` 를 사용합니다 :
 
 ```
 └── src
@@ -168,39 +168,41 @@ In a project directory of your choosing, create the following subdirectory struc
 </project>
 ```
 
-The [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin) provides many convenient features:
+[Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/maven-plugin) 플러그인은 많은 편리한 기능을 제공합니다 :
 
-* It collects all the jars on the classpath and builds a single, runnable "über-jar", which makes it more convenient to execute and transport your service.
-* It searches for the `public static void main()` method to flag as a runnable class.
-* It provides a built-in dependency resolver that sets the version number to match [Spring Boot dependencies](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml). You can override any version you wish, but it will default to Boot’s chosen set of versions.
+* 클래스패스와 빌드파일을 모으고 실행할 수있는 "über-jar"를 하나 만들고 실행하여 서비스를 실행하고 전송하는 것이 더 편리합니다.
+* 이것은 `public static void main()`메소드를 검색하여 실행 가능한 클래스로 변환한다.
+* [스프링 부트 의존성](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-dependencies/pom.xml)에 맞게 버전 번호를 설정하는 빌트인 의존성 분석기를 제공합니다. 원하는 모든 버전을 무시할 수 있지만 기본적으로 Boot에서 선택한 버전 세트가 사용됩니다.
 
-## Build with your IDE
-* Read how to import this guide straight into [Spring Tool Suite](http://spring.io/guides/gs/sts/).
-* Read how to work with this guide in [IntelliJ IDEA](http://spring.io/guides/gs/intellij-idea).
+## IDE로 빌드하기
+* [Spring Tool Suite로 직접 빌드하는 방법](http://spring.io/guides/gs/sts/)을 읽어보십시오.
+* [IntelliJ IDEA로 직접 빌드하는 방법](http://spring.io/guides/gs/intellij-idea)을 읽어보십시오.
 
-## Create the database
-Go to the terminal (command Prompt `cmd` in Microsoft Windows). Open MySQL client with a user that can create new users.
+## 데이터베이스 생성하기
+터미널로 이동하십시오. (Microsoft Windows의 프롬프트 `cmd`) 이후 새로운 사용자를 생성 할 수 있는 사용자로 MySQL 클라이언트를 엽니다.
 
-For example: On a Linux, use the command
+예시 : Linux에서는 다음 명령을 사용하십시오.
 
 ```bash
 $ sudo mysql --password
 ```
 
-> This connects to MySQL as a root, this is **not the recommended way** for a production server.
+> 
+MySQL을 루트로 연결합니다. **이것은 프로덕션 서버에 권장되는 방법은 아닙니다.**
 
-Create a new database
+
+새 데이터베이스 생성하기
 
 ```bash
-mysql> create database db_example; -- Create the new database
-mysql> create user 'springuser'@'localhost' identified by 'ThePassword'; -- Creates the user
-mysql> grant all on db_example.* to 'springuser'@'localhost'; -- Gives all the privileges to the new user on the newly created database
+mysql> create database db_example; -- 새 데이터베이스 만들기
+mysql> create user 'springuser'@'localhost' identified by 'ThePassword'; -- 사용자 생성하기
+mysql> grant all on db_example.* to 'springuser'@'localhost'; -- 생성된 사용자에게 모든 권한을 부여하기
 ```
 
-## Create the `application.properties` file
-Spring Boot gives you defaults on all things, the default in database is `H2`, so when you want to change this and use any other database you must define the connection attributes in the `application.properties` file.
+## `application.properties` 파일을 만들기
+Spring Boot는 모든 것에 기본값을 주며, 데이터베이스의 기본값은 `H2` 이므로이 값을 변경하고 다른 데이터베이스를 사용하려면 `application.properties` 파일에 연결 속성을 정의해야합니다.
 
-In the sources folder, you create a resource file `src/main/resources/application.properties`
+sources 폴더에서, `src/main/resources/application.properties` 리소스 파일을 생성합니다.
 
 ```properties
 spring.jpa.hibernate.ddl-auto=create
@@ -209,22 +211,22 @@ spring.datasource.username=springuser
 spring.datasource.password=ThePassword
 ```
 
-Here, `spring.jpa.hibernate.ddl-auto` can be `none`, `update`, `create`, `create-drop`, refer to the Hibernate documentation for details.
+여기서 `spring.jpa.hibernate.ddl-auto` 는 `none` , `update` , `create` , `create-drop` 일 수 있습니다. 자세한 내용은 Hibernate 문서를 참조하십시오.
 
-* `none` This is the default for `MySQL`, no change to the database structure.
-* `update` Hibernate changes the database according to the given Entity structures.
-* `create` Creates the database every time, but don’t drop it when close.
-* `create-drop` Creates the database then drops it when the `SessionFactory` closes.
+* `none` 이것이 MySQL의 기본값이며, 데이터베이스 구조는 변경되지 않습니다.
+* `update` Hibernate는 주어진 Entity 구조에 따라 데이터베이스를 변경합니다.
+* `create` 매번 데이터베이스를 생성하지만 닫을 때 데이터베이스를 삭제하지 않습니다.
+* `create-drop` 데이터베이스를 생성 한 후 `SessionFactory`가 닫힐 때 데이터베이스를 삭제합니다.
 
-We here begin with `create` because we don’t have the database structure yet. After the first run, we could switch it to `update` or `none` according to program requirements. Use `update` when you want to make some change to the database structure.
+우리는 아직 데이터베이스 구조가 없기 때문에 `create`로 구조를 생성합니다. 첫 번째 실행 후 프로그램 요구 사항에 따라 `update` 또는 `none`으로 전환 할 수 있습니다. 데이터베이스 구조를 약간 변경하려면 `update`를 사용하십시오.
 
-The default for `H2` and other embedded databases is `create-drop`, but for others like `MySQL` is `none`
+`H2`와 다른 내장 데이터베이스의 기본값은 `create-drop`이지만, `MySQL`과 같은 것들은 `none`입니다.
 
-It is good security practice that after your database is in production state, you make this `none` and revoke all privileges from the MySQL user connected to the Spring application, then give him only SELECT, UPDATE, INSERT, DELETE.
+데이터베이스를 프로덕션 상태로 만든 후에는이 옵션을 `none` 으로 만들고 Spring 응용 프로그램에 연결된 MySQL 사용자의 모든 권한을 취소 한 다음 SELECT, UPDATE, INSERT, DELETE 만 제공하는 것이 좋습니다.
 
-This is coming in details in the end of this guide.
+자세한 내용은 이 가이드의 끝 부분에 나와 있습니다.
 
-## Create the `@Entity` model
+## `@Entity` 모델 만들기
 
 `src/main/java/hello/User.java`
 
@@ -236,7 +238,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity // This tells Hibernate to make a table out of this class
+@Entity // Entity 어노테이션은 Hibernate에게 이 클래스에서 테이블을 만들도록 지시한다.
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -274,9 +276,9 @@ public class User {
 }
 ```
 
-This is the entity class which Hibernate will automatically translate into a table.
+위 모델은 Hibernate가 자동으로 테이블로 변환하는 엔티티 클래스입니다.
 
-## Create the repository
+## repository만들기
 
 `src/main/java/hello/UserRepository.java`
 
@@ -287,17 +289,17 @@ import org.springframework.data.repository.CrudRepository;
 
 import hello.User;
 
-// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
-// CRUD refers Create, Read, Update, Delete
+// 이것은 AUTO에 의해 자동으로 Spring에 의해 userRepository라는 Bean에 구현 될 것입니다.
+// CRUD는 생성, 읽기, 업데이트, 삭제를 나타냅니다.
 
 public interface UserRepository extends CrudRepository<User, Integer> {
 
 }
 ```
 
-This is the repository interface, this will be automatically implemented by Spring in a bean with the same name with changing case The bean name will be `userRepository`
+위 코드는 리포지터리 (repository) 인터페이스입니다. 대문자를 변경해, 같은 이름의 bean로 Spring에 의해 자동적으로 구현됩니다. bean명은 `userRepository`입니다.
 
-## Create a new controller for your Spring application
+## Spring 애플리케이션을위한 새로운 컨트롤러 생성하기
 
 `src/main/java/hello/MainController.java`
 
@@ -314,18 +316,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import hello.User;
 import hello.UserRepository;
 
-@Controller    // This means that this class is a Controller
-@RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
+@Controller    // Controller 어노테이션은 클래스가 컨트롤러라는 것을 의미합니다.
+@RequestMapping(path="/demo") // URL이 demo로 시작한다는 것을 의미합니다 (응용 프로그램 경로 이후).
 public class MainController {
-	@Autowired // This means to get the bean called userRepository
-	           // Which is auto-generated by Spring, we will use it to handle the data
+	@Autowired // userRepository라는 빈을 얻는다는 것을 의미합니다.
+	           // Spring에 의해 자동으로 생성 된 데이터를 처리하기 위해 사용합니다.
 	private UserRepository userRepository;
 
-	@GetMapping(path="/add") // Map ONLY GET Requests
+	@GetMapping(path="/add") // GET 방식으로 요청하기
 	public @ResponseBody String addNewUser (@RequestParam String name
 			, @RequestParam String email) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
+		// @ResponseBody는 반환 된 문자열이 뷰 이름이 아니라 요청값임을 의미합니다.
+		// @RequestParam은 GET 또는 POST 요청의 매개 변수임을 의미합니다.
 
 		User n = new User();
 		n.setName(name);
@@ -336,16 +338,16 @@ public class MainController {
 
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
-		// This returns a JSON or XML with the users
+		// 이렇게하면 사용자에게 JSON 또는 XML이 반환됩니다.
 		return userRepository.findAll();
 	}
 }
 ```
 
-> The above example does not explicitly specify `GET` vs. `PUT`, `POST`, and so forth, because `@GetMapping` is a shortcut for `@RequestMapping(method=GET)`. `@RequestMapping` maps all HTTP operations by default. Use `@RequestMapping(method=GET)` or [other shortcut annotations](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/package-summary.html) to narrow this mapping.
+> 위의 예제는 `@GetMapping`이 `@RequestMapping(method = GET)`의 바로 가기이므로 `GET`과 `PUT`, `POST` 등을 명시 적으로 지정하지 않았습니다. `@RequestMapping`은 기본적으로 모든 HTTP 연산을 매핑합니다. 이 매핑을 줄이려면`@RequestMapping(method = GET)`또는 다른 어노테이션을 사용하십시오.
 
-## Make the application executable
-Although it is possible to package this service as a traditional [WAR](http://spring.io/understanding/WAR) file for deployment to an external application server, the simpler approach demonstrated below creates a standalone application. You package everything in a single, executable JAR file, driven by a good old Java `main()` method. Along the way, you use Spring’s support for embedding the [Tomcat](http://spring.io/understanding/Tomcat) servlet container as the HTTP runtime, instead of deploying to an external instance.
+## 애플리케이션을 실행 가능하게 만들기
+이 서비스를 외부 응용 프로그램 서버에 배포하기위한 기존 [WAR](http://spring.io/understanding/WAR)  파일로 패키지화 할 수 있지만 아래에 설명 된 간단한 방법은 독립 실행 형 응용 프로그램을 만듭니다. 자바 `main()`메소드로 구동되는, 실행 가능한 단일 JAR 파일로 모든 것을 패키지화합니다. 도중에, 외부 인스턴스로 전개하는 대신 [Tomcat](http://spring.io/understanding/Tomcat) 서블릿 컨테이너를 HTTP 런타임으로 임베딩하기위한 Spring의 지원을 사용한다.
 
 `src/main/java/hello/Application.java`
 
@@ -364,37 +366,39 @@ public class Application {
 }
 ```
 
-## Build an executable JAR
-You can run the application from the command line with Gradle or Maven. Or you can build a single executable JAR file that contains all the necessary dependencies, classes, and resources, and run that. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+## 실행 가능한 JAR로 빌드하기
+Gradle 또는 Maven을 사용하여 명령 줄에서 응용 프로그램을 실행할 수 있습니다. 또는 모든 필요한 종속성, 클래스 및 자원을 포함하는 단일 실행 가능 JAR 파일을 빌드하고 실행할 수 있습니다. 따라서 개발 수명주기, 다양한 환경에 걸쳐 응용 프로그램으로 서비스를 쉽게 배포, 버전 및 배포 할 수 있습니다.
 
-If you are using Gradle, you can run the application using `./gradlew bootRun`. Or you can build the JAR file using `./gradlew build`. Then you can run the JAR file:
+Gradle을 사용하는 경우, `./gradlew bootRun`을 사용하여 응용 프로그램을 실행할 수 있습니다. 또는 `./gradlew build`를 사용하여 JAR 파일을 빌드 할 수 있습니다. 그런 다음 JAR 파일을 실행할 수 있습니다 :
 
 ```
 java -jar build/libs/gs-accessing-data-mysql-0.1.0.jar
 ```
 
-If you are using Maven, you can run the application using `./mvnw spring-boot:run`. Or you can build the JAR file with `./mvnw clean package`. Then you can run the JAR file:
+Maven을 사용한다면 `./mvnw spring-boot:run`을 사용하여 응용 프로그램을 실행할 수 있습니다. 또는 `./mvnw clean package`로 JAR 파일을 빌드 할 수 있습니다. 그런 다음 JAR 파일을 실행할 수 있습니다 :
 
 ```
 java -jar target/gs-accessing-data-mysql-0.1.0.jar
 ```
 
-> The procedure above will create a runnable JAR. You can also opt to [build a classic WAR file](http://spring.io/guides/gs/convert-jar-to-war/) instead.
+> 
+위의 절차는 실행 가능한 JAR을 생성합니다. 대신 [고전적인 WAR 파일을 빌드](http://spring.io/guides/gs/convert-jar-to-war/)하도록 선택할 수도 있습니다
 
-Logging output is displayed. The service should be up and running within a few seconds.
+로깅 출력이 표시됩니다. 몇 초 내에 서비스가 실행됩니다.
 
-## Test the application
-Now that the application is running, you can test it.
+## 응용 프로그램 테스트
+이제 응용 프로그램이 실행 중이므로 이를 테스트 할 수 있습니다.
 
-Use `curl` for example. Now you have 2 REST Web Services you can test
 
-`localhost:8080/demo/all` This gets all data `localhost:8080/demo/add` This adds one user to the data
+예를 들어, `curl`을 사용하십시오. 이제 테스트 할 수 있는 2 개의 REST 웹 서비스가 있습니다.
+
+`localhost:8080/demo/all` 모든 데이터를 얻어오기 또는 `localhost:8080/demo/add` 하나의 사용자를 데이터에 추가하기
 
 ```bash
 $ curl 'localhost:8080/demo/add?name=First&email=someemail@someemailprovider.com'
 ```
 
-The reply should be
+리턴값
 
 ```bash
 Saved
@@ -404,43 +408,44 @@ Saved
 $ curl 'localhost:8080/demo/all'
 ```
 
-The reply should be
+리턴값
 
 ```json
 [{"id":1,"name":"First","email":"someemail@someemailprovider.com"}]
 ```
 
-## Make some security changes
-Now when you are on production environment, you may be exposed to SQL injection attacks. A hacker may inject `DROP TABLE` or any other destructive SQL commands. So as a security practice, make those changes to your database before you expose the application to users.
+## 보안 변경하기
+이제 프로덕션 환경에서 SQL 삽입 공격에 노출 될 수 있습니다. 해커는 `DROP TABLE`또는 다른 파괴적인 SQL 명령을 삽입 할 수 있습니다. 따라서 보안 사례로서 응용 프로그램을 사용자에게 노출하기 전에 데이터베이스에 변경 사항을 적용하십시오.
 
 ```bash
 mysql> revoke all on db_example.* from 'springuser'@'localhost';
 ```
 
-This revokes ALL the priviliges from the user associated with the Spring application. Now the Spring application **cannot do** anything in the database. We don’t want that, so
+이것은 Spring 애플리케이션과 관련된 사용자로부터 모든 권한을 취소합니다. 이제 Spring 애플리케이션은 **데이터베이스에서** 아무 것도 할 수 없습니다.
 
 ```bash
 mysql> grant select, insert, delete, update on db_example.* to 'springuser'@'localhost';
 ```
 
-This gives your Spring application only the privileges necessary to make changes to **only** the data of the database and not the structure (schema).
+이렇게하면 Spring 애플리케이션에 구조 (스키마)가 아닌 데이터베이스의 **데이터만** 변경하는 데 필요한 권한 만 부여됩니다.
 
-Now make this change to your `src/main/resources/application.properties`
+이제 당신의 `src/main/resources/application.properties`에서 변경하십시오.
 
 ```properties
 spring.jpa.hibernate.ddl-auto=none
 ```
 
-This is instead of `create` which was on the first run for Hibernate to create the tables from your entities.
+위 코드는 Hibernate가 엔티티들로부터 테이블을 생성하기위한 첫 번째 실행에 있던 `create` 대신에 사용됩니다.
 
-When you want to make changes on the database, regrant the permissions, change the `spring.jpa.hibernate.ddl-auto` to `update`, then re-run your applications, then repeat. Or, better, use a dedicated migration tool such as Flyway or Liquibase.
+데이터베이스를 변경하려면 권한을 변경하고 `spring.jpa.hibernate.ddl-auto` 파일을 `update` 파일로 변경 한 다음 응용 프로그램을 다시 실행하고 반복하십시오. 또는 Flyway 또는 Liquibase와 같은 전용 마이그레이션 도구를 사용하십시오.
 
-## Summary
-Congratulations! You’ve just developed a Spring application which is bound to a MySQL database, Ready for production!
+## 요약
+축하합니다! 당신은 방금 MySQL 데이터베이스에 바인딩 된 Spring 애플리케이션을 개발했습니다.
 
-## See Also
-The following guides may also be helpful:
+## 참고 사항
 
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing Data with MongoDB](https://spring.io/guides/gs/accessing-data-mongodb/)
-* [Accessing data with Gemfire](https://spring.io/guides/gs/accessing-data-gemfire/)
+다음 가이드도 도움이 될 수 있습니다 :
+
+* [JPA로 데이터 액세스](https://spring.io/guides/gs/accessing-data-jpa/)
+* [MongoDB로 데이터 액세스](https://spring.io/guides/gs/accessing-data-mongodb/)
+* [Gemfire로 데이터 액세스](https://spring.io/guides/gs/accessing-data-gemfire/)
